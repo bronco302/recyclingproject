@@ -2,16 +2,18 @@ package rcm;
 
 public class RecyclableItem {
 	private String typeOfRecyclableItem;
-	private double weight;
-	private Payment
+	private double weight = 0;
+	private Payment currentAmount; 
+	
 	
 	public RecyclableItem(){
 		typeOfRecyclableItem = new String("Not Specified");
-		weight = 0 ;
+	//	currentAmount = new Payment(typeOfRecyclableItem);
 	}
 	public RecyclableItem(String typeOfItem, double weight){
 		typeOfRecyclableItem = typeOfItem; 
 		this.weight = weight; 
+	//	currentAmount = new Payment(typeOfRecyclableItem);
 		
 	}
 	
@@ -22,4 +24,6 @@ public class RecyclableItem {
 	public double getWeight(){
 		return weight;
 	}
+	
+	
 }
