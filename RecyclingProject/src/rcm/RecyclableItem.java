@@ -1,5 +1,11 @@
 package rcm;
 
+/**
+ * Know what kind of item is, weight, and price.
+ * @author Jonathan
+ *
+ */
+
 public class RecyclableItem {
 	private String typeOfRecyclableItem;
 	private int weight;
