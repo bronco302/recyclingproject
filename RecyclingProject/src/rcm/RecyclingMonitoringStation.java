@@ -6,16 +6,15 @@ import java.util.Observable;
 import rcm.RecyclingMachine.Activity;
 
 /**
- * Represents recyling management system
+ * Works on collecting information on RecyclingMachine and statistics for Machines
  * @author StevenChua
  *
  */
 
-public class RMOS extends Observable{
+public class RecyclingMonitoringStation extends Observable{
 
 	private Manager[] managers = new Manager[2];
-	private ArrayList<RCM> rcmGroup = new ArrayList<RCM>();
-	private ItemType[] itemTypes = new ItemType[2];
+	private Item[] itemTypes = new ItemType[2];
 	private ArrayList<Item> acceptedItems = new ArrayList<Item>();
 
 	/**
@@ -28,3 +27,5 @@ public class RMOS extends Observable{
 		itemTypes[0] = new ItemType("Glass", 1.00);
 		itemTypes[1] = new ItemType("Aluminum", 0.75);
 	}
+	
+	
