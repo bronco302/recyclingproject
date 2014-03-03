@@ -18,6 +18,8 @@ public class RecyclableItem implements ItemForRecycle {
 
 	public RecyclableItem(String typeOfItem, double weight){
 		acceptableItems.put("Aluminum" , .05);
+		typeOfRecyclableItem = typeOfItem;
+		currentAmount = new Payment();
 	}
 		
 	public int getQuantity() {

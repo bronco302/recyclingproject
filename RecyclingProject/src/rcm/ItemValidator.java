@@ -11,7 +11,6 @@ public class ItemValidator {
 	 */
 	private double weight;
 
-	
 	public ItemValidator(String name, RecyclableItem type, double weight){
 		this.name = name;
 		this.type = type;

@@ -12,7 +12,11 @@ public class RecyclableSystem {
 		s1.addItem("Aluminum");
 		s1.addItem("Aluminum");
 		s1.addItem("Aluminum");
+		
 		System.out.println(s1.updateTotalAmount());
+		
+		RecyclingMachine r1 = new RecyclingMachine();
+		System.out.println(r1.getMachineID());
 	//	System.out.println(r2.getWeight());
 		
 		

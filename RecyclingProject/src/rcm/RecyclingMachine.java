@@ -1,9 +1,3 @@
-
-package rcm;
-
-public class RecyclingMachine {
-	
-}
 package rcm; 
 
 import java.util.ArrayList;
@@ -17,19 +11,25 @@ import java.util.Random;
  *
  */
  
-public class RecylingMachine extends Observable{
+public class RecyclingMachine extends Observable{
   
-    public enum MachineHealth{
-      ALMOST_FULL, FULL; CASH_NEEDED; COUPONS_NEEDED; FUNCTIONING_WELL; 
-    }
-    public enum Aciivity{
-     INACTIVITY; ACTIVITY;
-    }
+    //public enum MachineHealth{
+     // ALMOST_FULL, FULL; CASH_NEEDED; COUPONS_NEEDED; FUNCTIONING_WELL; 
+   // }
+   // public enum Aciivity{
+    // INACTIVITY; 
+   //  ACTIVITY;
+   // }
     
-    private String machine_id; 
+    private int machineID = 150; 
     private String activity; 
     private String machine_health; 
-    private double 
+    
+    public int getMachineID(){
+    	return machineID;
+    }
+
+}
     
  
-
+ 
