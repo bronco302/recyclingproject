@@ -1,11 +1,8 @@
 package rcm;
 
 public class ItemValidator {
-<<<<<<< HEAD
-	
-=======
   
-  public class ItemValidator {
+ 
 
 	private String name;
 	private RecyclableItem type;
@@ -53,6 +50,6 @@ public class ItemValidator {
 	}
 
 }
->>>>>>> FETCH_HEAD
 
-}
+
+

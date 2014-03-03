@@ -1,10 +1,9 @@
-<<<<<<< HEAD
+
 package rcm;
 
 public class RecyclingMachine {
 	
 }
-=======
 package rcm; 
 
 import java.util.ArrayList;
@@ -33,4 +32,4 @@ public class RecylingMachine extends Observable{
     private double 
     
  
->>>>>>> FETCH_HEAD
+
