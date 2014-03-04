@@ -10,20 +10,20 @@ public class Session {
 		totalAmount = new Payment();
 	}
 	
-	public void addRecyclableItem(String itemType, double weight){
+	public void addRecyclableItem(String itemType){
 		if(objectCounter>0){
-			recyclableItemList[objectCounter] = new RecyclableItem(itemType, weight);
+			recyclableItemList[objectCounter] = new RecyclableItem(itemType);
 			objectCounter++;
 		}
 		else{
-			recyclableItemList[objectCounter] = new RecyclableItem(itemType, weight);
+			recyclableItemList[objectCounter] = new RecyclableItem(itemType);
 			objectCounter++;
 		}
 	}
 	
 	public double updateTotalAmount(){
 		for (int i=0;i<objectCounter;i++){
-			totalAmount.setAmount(recyclableItemList[i].getPaymentAmount());
+			totalAmount.addAmount(recyclableItemList[i].getPaymentAmount());
 			
 		}
 		return totalAmount.getAmount();

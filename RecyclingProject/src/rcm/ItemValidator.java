@@ -1,6 +1,6 @@
 package rcm;
 
-public class ItemValidator {
+public class ItemValidator extends RecyclableItem{
   
  
 
@@ -11,17 +11,14 @@ public class ItemValidator {
 	 */
 	private double weight;
 
-	public ItemValidator(String name, RecyclableItem type, double weight){
-		this.name = name;
+	public ItemValidator(RecyclableItem type){
 		this.type = type;
-		this.weight = weight;
 	}
 
 
 	public ItemValidator(){
 		name = "Needs to be determined";
-		type = null;
-		weight = 0;
+
 	}
 
 	public String getName(){

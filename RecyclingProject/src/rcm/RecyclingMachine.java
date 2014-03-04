@@ -1,6 +1,6 @@
 package rcm; 
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Random;
@@ -21,13 +21,27 @@ public class RecyclingMachine extends Observable{
    //  ACTIVITY;
    // }
     
-    private int machineID = 150; 
-    private String activity; 
+    private int machineID; 
+    private boolean active; 
     private String machine_health; 
+    Random generator = new Random(); 
+    
+    public RecyclingMachine(){
+    	machineID = generator.nextInt(89999) + 10000;
+    	active = true;	
+    }
     
     public int getMachineID(){
     	return machineID;
     }
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 }
     
