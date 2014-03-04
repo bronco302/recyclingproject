@@ -27,6 +27,16 @@ public class RecyclingMonitoringStation extends Observable{
 		itemTypes[0] = new ItemType("Glass", 1.00);
 		itemTypes[1] = new ItemType("Aluminum", 0.75);
 	}
-	//testing
+	
+	public boolean authenticate(String username, String password){
+		for (Manager m: managers){ 
+			if(m.getUsername().equals(username) && m.getPassword().equals(password)) return true;
+		}
+		return false;
+	}
+
+	public ArrayList<RCM> getRCMGroup(){
+		return rcmGroup;
+	}
 	
 	
