@@ -20,7 +20,7 @@ public class RecyclingMonitoringStation extends Observable{
 	/**
 	 * Creates new RMOS with default managers and item types
 	 */
-	public RMOS(){
+	public RecyclingMonitoringStation(){
 		managers[0] = new Manager("admin", "pass");
 		managers[1] = new Manager("manager", "password");
 
