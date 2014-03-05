@@ -7,6 +7,7 @@ public class RecyclableItem implements ItemForRecycle {
 	private double weight = 0;
 	private int quantity = 0; 
 	private Payment currentAmount;
+	private ItemValidator validator; 
 	protected Map<String, Double> acceptableItemsWeight; 
 	protected Map<String, Double> acceptableItems ;
 	
@@ -24,7 +25,7 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItemsWeight.put("Aluminum", 0.0364865);
 		acceptableItemsWeight.put("Plastic", 0.0279987);
 		acceptableItemsWeight.put("Glass", 0.440925);
-		
+		validator = new ItemValidator();
 		typeOfRecyclableItem = typeOfItem;
 		currentAmount = new Payment();
 	}
@@ -49,23 +50,15 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItems.put(newType, value);
 	}
 	
-	public boolean addItem(){
-	    Iterator<Map.Entry<String, Double>> it = acceptableItems.entrySet().iterator();
-	    while (it.hasNext()) {
-	    	Map.Entry<String, Double> pairs = it.next();
-	    	if(typeOfRecyclableItem.equals(pairs.getKey())){
-	    		if(pairs.getValue() != 0){
-	    			setQuantity(getQuantity() + 1);
-	    			return true;
-	    		}
-	    		else
-	    		{
-	    			return false;
-	    		}
-	    	}
-	    	
-	    }
-	    return false;
+	public void addItem()
+	{    
+		if(validator.validateItem(acceptableItems,typeOfRecyclableItem)){
+	 		setQuantity(getQuantity() + 1);
+		}
+		else{
+			System.out.println("Item is not the correct type, please insert only "+typeOfRecyclableItem+" cans.");
+		}
+			
 	}
 	public double getPaymentAmount(){
 		currentAmount.addAmount((acceptableItemsWeight.get(typeOfRecyclableItem)*quantity)*(acceptableItems.get(typeOfRecyclableItem)));

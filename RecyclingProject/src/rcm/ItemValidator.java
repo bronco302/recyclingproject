@@ -1,32 +1,15 @@
 package rcm;
 
+import java.util.Map;
+
 public class ItemValidator extends RecyclableItem{
   
- 
-
-	private String name;
-	private RecyclableItem type;
-	/**
-	 * Calculates the weight of item in ounce. 
-	 */
+	
+	
 	private double weight;
 
-	public ItemValidator(RecyclableItem type){
-		this.type = type;
-	}
-
-
 	public ItemValidator(){
-		name = "Needs to be determined";
-
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public RecyclableItem getType(){
-		return type;
+		
 	}
 
 	public double getWeight(){
@@ -37,13 +20,15 @@ public class ItemValidator extends RecyclableItem{
 		return weight * 28.3495;
 	}
 
-	/**
-	 * Calculates cash equivalent value of an item with the weight of the item and price per lb. 
-	 * Weight is converted to lb from oz
-	 */
-	public double getValue(){
-		return Math.round((weight/16) * type.getPrice() * 100.0) / 100.0;
+	public boolean validateItem(Map<String, Double> acceptableItems,String type){
+		System.out.println(acceptableItems.get(type));
+		if (acceptableItems.get(type)==0){
+			return false;
+		}
+		else return true;	
 	}
+
+	
 
 }
 
