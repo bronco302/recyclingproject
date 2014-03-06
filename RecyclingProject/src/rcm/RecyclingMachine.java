@@ -33,6 +33,7 @@ public class RecyclingMachine extends Observable{
     	transaction = new Session();
     }
     
+    
     public int getMachineID(){
     	return machineID;
     }

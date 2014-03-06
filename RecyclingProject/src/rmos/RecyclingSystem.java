@@ -13,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.*;
 
 import rcm.*; 
 
@@ -29,21 +30,27 @@ import javax.swing.event.ListSelectionListener;
 
 class RCMUI extends JPanel {
 	
-	
+	private RecyclingMachine rcm;
 	JPanel inputpanel = new JPanel();
-
     JTextArea messageTextArea;
-
+    JTextArea body;
+    JLabel machineIDLabel;
+    JLabel title;
     
-    public RCMUI(){
+    public RCMUI(RecyclingMachine rcm){
+    	setBorder(BorderFactory.createLineBorder(Color.BLACK));	
+    	this.rcm = rcm;
+    	machineIDLabel = new JLabel("Recycling Machine ID");
+    	machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+    
+    	title = new JLabel("Recycling Machine");
+   
     	
-    	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	messageTextArea = new JTextArea();
-    	
     	setBackground(Color.lightGray);
-        messageTextArea.setText("Recycling Machine");
-        messageTextArea.setEditable(false);
-        messageTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        body = new JTextArea(10,20);
+        
     	setBorderLayout();
     }    
        
@@ -51,8 +58,12 @@ class RCMUI extends JPanel {
  	{	
  		
  		inputpanel.setLayout(new BorderLayout());
- 		inputpanel.add(messageTextArea);
- 		inputpanel.add(messageTextArea,BorderLayout.CENTER);
+ 		//inputpanel.add(messageTextArea);
+ 		inputpanel.add(title,BorderLayout.NORTH);
+ 		inputpanel.add(body,BorderLayout.CENTER);
+ 		inputpanel.add(machineIDLabel,BorderLayout.WEST);
+ 
+ 	
  		add(inputpanel);
 		 		
  	}
@@ -83,7 +94,7 @@ class RMOSUI extends JPanel {
  	{	
  		
  		inputpanel.setLayout(new BorderLayout());
- 		inputpanel.add(messageTextArea,BorderLayout.CENTER);
+ 		inputpanel.add(messageTextArea,BorderLayout.NORTH);
  		add(inputpanel);
  	}
  }
@@ -93,14 +104,14 @@ public class RecyclingSystem {
        
     RCMUI mainPanel;
     RMOSUI mainPanel1;
-    public RecyclingSystem() {
+    public RecyclingSystem(RecyclingMachine rcm) {
         
         mainFrame = new JFrame("Auction House");
         mainFrame.pack();
         
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        mainPanel = new RCMUI();
+        mainPanel = new RCMUI(rcm);
         mainPanel1 = new RMOSUI();
    		mainFrame.setLayout(new GridLayout(1,2));
    		mainFrame.getContentPane().add(mainPanel1);
@@ -135,7 +146,8 @@ public class RecyclingSystem {
 		s1.addItem("Aluminum");
 		System.out.println(s1.updateTotalAmount());
 		*/
-		new RecyclingSystem();
+		RecyclingMachine rcm = new RecyclingMachine();
+		new RecyclingSystem(rcm);
 		
 	}
 }
