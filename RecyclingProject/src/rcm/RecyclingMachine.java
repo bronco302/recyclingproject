@@ -24,11 +24,13 @@ public class RecyclingMachine extends Observable{
     private int machineID; 
     private boolean active; 
     private String machine_health; 
+    private Session transaction; 
     Random generator = new Random(); 
     
     public RecyclingMachine(){
     	machineID = generator.nextInt(89999) + 10000;
     	active = true;	
+    	transaction = new Session();
     }
     
     public int getMachineID(){
