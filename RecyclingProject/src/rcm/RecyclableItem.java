@@ -50,19 +50,21 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItems.put(newType, value);
 	}
 	
-	public void addItem()
+	public boolean addItem()
 	{    
 		if(validator.validateItem(acceptableItems,typeOfRecyclableItem)){
 	 		setQuantity(getQuantity() + 1);
+	 		return true;
 		}
 		else{
 			System.out.println("Item is not the correct type, please insert only "+typeOfRecyclableItem+" cans.");
+			return false;
 		}
 			
 	}
 	public double getPaymentAmount(){
-		currentAmount.addAmount((acceptableItemsWeight.get(typeOfRecyclableItem)*quantity)*(acceptableItems.get(typeOfRecyclableItem)));
-			
+		currentAmount.setAmount((acceptableItemsWeight.get(typeOfRecyclableItem)*quantity)*(acceptableItems.get(typeOfRecyclableItem)));
+		//System.out.println(currentAmount.getAmount());	
 		
 		return currentAmount.getAmount();
 

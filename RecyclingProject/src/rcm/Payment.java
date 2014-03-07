@@ -43,5 +43,8 @@ public class Payment {
 		public void addAmount(double newAmount){
 			this.amount += newAmount;
 		}
+		public void subAmount (double newAmount){
+			this.amount -= newAmount;
+		}
 
 }

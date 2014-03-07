@@ -128,27 +128,30 @@ public class RecyclingSystem {
         mainFrame.setVisible(true);
     }
 	public static void main(String [] args){
-	/*
+	
 		Session s1 = new Session();
 		s1.addRecyclableItem("Aluminum");
 		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
 		s1.addRecyclableItem("Plastic");
 		s1.addItem("Plastic");
-		s1.addItem("Plastic");
-		s1.addItem("Plastic");
-		s1.addRecyclableItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Aluminum");
+
 		System.out.println(s1.updateTotalAmount());
-		*/
+		
+		
 		RecyclingMachine rcm = new RecyclingMachine();
-		new RecyclingSystem(rcm);
+		
+		rcm.initiateSession("Aluminum");
+		rcm.addItem();
+		rcm.initiateSession("Plastic");
+		rcm.addItem();
+		rcm.addItem();
+		rcm.addItem();
+		rcm.addItem();
+		
+		
+		System.out.println(rcm.payCustomer());
+		//System.out.println(rcm.getAvailableCash());
+	//	new RecyclingSystem(rcm);
 		
 	}
 }
