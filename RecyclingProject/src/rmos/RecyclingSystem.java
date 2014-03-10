@@ -5,14 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.*;
 
 import rcm.*; 
@@ -21,9 +13,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import javax.swing.ImageIcon;
 
 //testing again if this works
 
@@ -37,28 +30,23 @@ class RCMUI extends JPanel {
     JTextArea body;
     JLabel machineIDLabel;
     JLabel title;
-    JButton addItemButton,helpButton;
+    JButton addItemButton,helpButton,finishButton;
     JButton aluminumButton,plasticButton,glassButton;
+    ImageIcon icon;
     
     public RCMUI(RecyclingMachine rcm){
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));	
     	this.rcm = rcm;
-    	machineIDLabel = new JLabel("Recycling Machine ID");
-    	machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-    
-    	title = new JLabel("Recycling Machine"); 	
-    	messageTextArea = new JTextArea();
+    	//machineIDLabel = new JLabel("Recycling Machine ID");
+    	//machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+   
     	setBackground(Color.lightGray);
-        body = new JTextArea(10,20);
-        addItemButton = new JButton("Add Item");
+        
     	helpButton = new JButton("Help");
     	helpButton.setSize(new Dimension(20, 20));
-        aluminumButton = new JButton("Aluminum Cans");
-        aluminumButton.setPreferredSize(new Dimension(50, 80));
-        plasticButton = new JButton("Plastic Bottles");
-        glassButton = new JButton("Glass Bottles");
+       
       //  setSelectionMenu();
-        setBorderLayout();
+        setRCMcontrol();
     }    
        
  	private void setSelectionMenu(){
@@ -66,34 +54,90 @@ class RCMUI extends JPanel {
  		inputpanel.setLayout(new BorderLayout());
  		
  		inputpanel.add(title,BorderLayout.NORTH);
- 	//	inputpanel.add(aluminumButton,BorderLayout.CENTER);
- 	//	inputpanel.add(plasticButton,BorderLayout.CENTER);
- 	//	inputpanel.add(glassButton,BorderLayout.CENTER);
- 	}
- 	private void setBorderLayout()
- 	{	
- 		JPanel innerGrid = new JPanel(new GridLayout(1,3));
- 		inputpanel.setLayout(new BorderLayout());
- 		inputpanel.setSize(400,700);
- 		System.out.println(inputpanel.getSize());
- 		innerGrid.add(aluminumButton);
- 		innerGrid.add(plasticButton);
- 		innerGrid.add(glassButton);
- 		//inputpanel.add(messageTextArea);
- 		inputpanel.add(title,BorderLayout.NORTH);
- 		inputpanel.add(innerGrid,BorderLayout.CENTER);
- 		//inputpanel.add(addItemButton,BorderLayout.CENTER);
- 		//inputpanel.add(aluminumButton,BorderLayout.CENTER);
- 	 	//inputpanel.add(plasticButton,BorderLayout.CENTER);
- 	 	//inputpanel.add(glassButton,BorderLayout.CENTER);
- 		inputpanel.add(machineIDLabel,BorderLayout.WEST);
- 		inputpanel.add(helpButton,BorderLayout.SOUTH);
- 		
- 		
  
+ 	}
+ 	private void setRCMcontrol()
+ 	{	
+ 		JPanel buttonPanel = createItemButtons();
+ 		JPanel itemcountPanel = createItemCount();
+ 		JPanel addPanel = createControlButtons();
+ 		JPanel titlePanel = createTitle();
+ 		JPanel inputpanel = new JPanel(new GridLayout(5,1));
+ 			
+ 		inputpanel.add(titlePanel);
+ 		inputpanel.add(buttonPanel);
+ 	//	inputpanel.add(machineIDLabel);
+ 		inputpanel.add(itemcountPanel);
+ 		inputpanel.add(addPanel);
+ 		inputpanel.add(helpButton,BorderLayout.SOUTH);
+
+ 		inputpanel.setBorder(new EmptyBorder(100, 100, 100, 100));
  		add(inputpanel);
- 	//	createSelectionMenu();
+
  		
+ 	}
+ 	
+ 	public JPanel createTitle(){
+ 		JPanel panel = new JPanel();
+ 		icon = createImageIcon("images/recycling.png","Recycling Symbol");
+ 	//	if(icon ==  null){System.out.println("File not found or accessibleContext."); return panel;}
+ 		title = new JLabel("Recycling Machine",icon,JLabel.CENTER); 	
+    	title.setVerticalAlignment(JLabel.TOP);
+    	title.setHorizontalAlignment(JLabel.CENTER);
+ 		
+ 		return panel;
+ 	}
+ 	
+ 	private ImageIcon createImageIcon(String path, String description) {
+ 		
+ 		java.net.URL imgURL = getClass().getResource(path);
+ 		if (imgURL != null) {
+ 			return new ImageIcon(imgURL, description);
+ 		} else {
+ 			System.err.println("Couldn't find file: " + path);
+ 			return null;
+ 		}
+	}
+
+	public JPanel createItemButtons(){
+ 		
+ 		JPanel panel = new JPanel();
+ 		panel.setLayout(new GridLayout(1,3));
+ 		aluminumButton = new JButton("Aluminum Cans");
+ 		aluminumButton.setPreferredSize(new Dimension(50, 80));
+        plasticButton = new JButton("Plastic Bottles");
+        glassButton = new JButton("Glass Bottles");
+        panel.add(aluminumButton);
+        panel.add(plasticButton);
+        panel.add(glassButton);
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        return panel;
+         
+ 	}
+ 	
+ 	public JPanel createItemCount(){
+ 		JPanel panel = new JPanel();
+ 		panel.setLayout(new GridLayout(1,1));
+ 	//	JLabel label = new JLabel("");
+ 		messageTextArea = new JTextArea();
+ 		messageTextArea.setEditable(false);
+ 		messageTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));	
+ 		panel.add(messageTextArea);
+ 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+ 		return panel;
+ 	}
+ 	
+ 	public JPanel createControlButtons(){
+ 		JPanel panel = new JPanel();
+ 		panel.setLayout(new BorderLayout());
+ 		finishButton = new JButton("Finish");
+ 		finishButton.setPreferredSize(new Dimension(90, 40));
+ 		addItemButton = new JButton("Add Item");
+ 		addItemButton.setPreferredSize(new Dimension(90,40));
+ 		panel.add(addItemButton,BorderLayout.WEST);
+ 		panel.add(finishButton,BorderLayout.EAST);
+ 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+ 		return panel;
  	}
 
  }
@@ -144,7 +188,7 @@ public class RecyclingSystem {
         
         mainPanel = new RCMUI(rcm);
         mainPanel1 = new RMOSUI();
-   		mainFrame.setLayout(new GridLayout(1,2));
+   		mainFrame.setLayout(new GridLayout(1,3));
    		mainFrame.getContentPane().add(mainPanel1);
        	mainFrame.getContentPane().add(mainPanel);
     	
