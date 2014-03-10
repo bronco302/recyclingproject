@@ -6,7 +6,7 @@ public class Session {
 	private ItemForRecycle[] recyclableItemList;
 	
 	public Session(){
-		recyclableItemList = new ItemForRecycle[10];
+		recyclableItemList = new ItemForRecycle[50];
 		totalAmount = new Payment();
 	}
 	
@@ -41,6 +41,34 @@ public class Session {
 			}
 		}
 		return false;
+	}
+	
+	public int getQuantity(String nameOfItem){
+		for (int i=0;i<objectCounter;i++){
+			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
+				return recyclableItemList[i].getQuantity();
+			}
+		}
+		return 0;
+		
+	}
+	
+	public double getWeight(String nameOfItem){
+		for (int i=0;i<objectCounter;i++){
+			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
+				return recyclableItemList[i].getWeight();
+			}
+		}
+		return 0;
+	}
+	
+	public double getPayingAmountForItem(String nameOfItem){
+		for (int i=0;i<objectCounter;i++){
+			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
+				return recyclableItemList[i].getPayingAmountForItem();
+			}
+		}
+		return 0;
 	}
 	
 	

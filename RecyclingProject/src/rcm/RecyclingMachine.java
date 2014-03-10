@@ -1,5 +1,6 @@
 package rcm; 
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -22,20 +23,20 @@ public class RecyclingMachine extends Observable{
     private boolean active;
     private String selectedItemType;
     private Payment availableCash;
-    private String machine_health; 
+    private int group = 1; 
     private Session transaction; 
-    public String Status; 
+    private String Status;
     Random generator = new Random(); 
     
     public RecyclingMachine(){
     	machineID = generator.nextInt(89999) + 10000;
     	active = true;	
     	transaction = new Session();
-<<<<<<< HEAD
-    	this.Status = "Disabled"; 
-=======
+
+    	this.Status = "Enabled"; 
+
     	availableCash = new Payment(.2);
->>>>>>> FETCH_HEAD
+
     }
     
     public int getMachineID(){
@@ -50,9 +51,7 @@ public class RecyclingMachine extends Observable{
 		this.active = active;
 	}
 	
-<<<<<<< HEAD
 
-=======
 	public double getAvailableCash(){
 		return availableCash.getAmount();
 	}
@@ -67,7 +66,13 @@ public class RecyclingMachine extends Observable{
 		transaction.addItem(getSelectedItemType());
 	}
 	
-	
+	public String getCurrentAmount(){
+		DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+        return(format.format(transaction.updateTotalAmount()));
+		
+		
+	}
 	
 	public double payCustomer(){
 		if(checkFunds(transaction.updateTotalAmount())){
@@ -98,7 +103,30 @@ public class RecyclingMachine extends Observable{
 	public void setSelectedItemType(String selectedItemType) {
 		this.selectedItemType = selectedItemType;
 	}
->>>>>>> FETCH_HEAD
+	
+	public int getQuantity(){
+		return transaction.getQuantity(selectedItemType);
+	}
+	
+	public String getWeight(){
+		DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+		return format.format(transaction.getWeight(selectedItemType));		
+	}
+
+	public String getPaymentForItem(){
+		DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+		return format.format(transaction.getPayingAmountForItem(selectedItemType));
+	}
+
+	public int getGroup() {
+		return group;
+	}
+
+	public void setGroup(int group) {
+		this.group = group;
+	}
 
 }
     

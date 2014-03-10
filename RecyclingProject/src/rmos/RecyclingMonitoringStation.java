@@ -1,21 +1,14 @@
 package rmos;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.io.*;
-import java.util.*;
 
 import rcm.*;
 import rmos.Machine.Status;
 
-/**
- * Works on collecting information on Machine and statistics for Machines
- * @author StevenChua
- *
- */
-
-public class RMO extends Observable implements Serializable{
-
+public class RecyclingMonitoringStation {
+	
+	private RecyclingMachine registeredMachines[];
+	private int objectCounter = 0;
 	private static final long serialVersionUID = 1L;
 	private Admin[] managers = new Admin[2];
 	private ArrayList<Machine> rcmGroup = new ArrayList<Machine>();
@@ -33,7 +26,9 @@ public class RMO extends Observable implements Serializable{
 	/**
 	 * Creates new RMOS with default managers and item types
 	 */
-	public RMO(){
+	public RecyclingMonitoringStation(){
+		
+		registeredMachines = new RecyclingMachine[10];
 		managers[0] = new Admin("admin", "pass");
 		managers[1] = new Admin("manager", "password");
 
@@ -69,13 +64,52 @@ public class RMO extends Observable implements Serializable{
 	 * Adds RecyclingMachine to RCM group
 	 * @param RecyclingMachine
 	 */
-	public void addMachine(Machine RecyclingMachine){
-		rcmGroup.add(RecyclingMachine);
-		setChanged();
-		notifyObservers(this);
-		new RecyclingMachine();
+	public void addMachine(){
+		//rcmGroup.add(RecyclingMachine);
+		if(objectCounter>0){
+			registeredMachines[objectCounter] = new RecyclingMachine();
+			objectCounter++;
+			
+		}
+		else{
+			registeredMachines[objectCounter] = new RecyclingMachine();
+			objectCounter++;
+		}
+		//new RecyclingMachine();
 	}
-
+	
+	public void addExistingMachine(RecyclingMachine machine){
+		if(objectCounter>0){
+			registeredMachines[objectCounter] = machine;
+			objectCounter++;
+			
+		}
+		else{
+			registeredMachines[objectCounter] = machine;
+			objectCounter++;
+		}
+	}
+	
+	public void getMachineIDS(){
+		for (int i=0;i<objectCounter;i++){
+				if(registeredMachines[i].getGroup()==1){
+				System.out.println(registeredMachines[i].getMachineID());	
+				}
+		}
+	}
+	
+	public void print(int id){
+		System.out.println(queryMachine(id));
+	}
+	
+	public int queryMachine(int id){
+		for (int i=0;i<objectCounter;i++){
+			if(registeredMachines[i].getMachineID()==id){
+				return i;
+			}
+		}
+		return id;
+	}
 	/**
 	 * Gets rid of Machine with given id from RCM group
 	 * @param id
@@ -86,8 +120,7 @@ public class RMO extends Observable implements Serializable{
 			if (m.getID().equals(id)) machineToRemove = m;
 		}
 		rcmGroup.remove(machineToRemove);
-		setChanged();
-		notifyObservers(this);
+	
 	}
 
 	/**
@@ -103,8 +136,7 @@ public class RMO extends Observable implements Serializable{
 		}
 		if (index < rcmGroup.size()){
 			rcmGroup.get(index).setStatus(status);
-			setChanged();
-			notifyObservers(this);
+		
 		}
 	}
 
@@ -131,8 +163,7 @@ public class RMO extends Observable implements Serializable{
 	public void addItem(Item newItem){
 		acceptedItems.add(newItem);
 		rcmGroup.get(0).getAcceptedItems().add(newItem);
-		setChanged();
-		notifyObservers(this);
+
 	}
 
 	/**
@@ -146,8 +177,7 @@ public class RMO extends Observable implements Serializable{
 		}
 		acceptedItems.remove(itemToRemove);
 		rcmGroup.get(0).getAcceptedItems().remove(itemToRemove);
-		setChanged();
-		notifyObservers(this);
+	
 	}
 
 	public TypeofItem getGlass(){
@@ -168,8 +198,7 @@ public class RMO extends Observable implements Serializable{
 	 */
 	public void setGlassPrice(double price){
 		itemTypes[0].setPrice(price);
-		setChanged();
-		notifyObservers(this);
+
 	}
 
 	/**
@@ -178,8 +207,7 @@ public class RMO extends Observable implements Serializable{
 	 */
 	public void setAluminumPrice(double price){
 		itemTypes[1].setPrice(price);
-		setChanged();
-		notifyObservers(this);
+
 	}
 
 	public double getTotalAluminumWeight(){
@@ -193,8 +221,7 @@ public class RMO extends Observable implements Serializable{
 	public void setItemStatistics(){
 		totalAluminum = 60;
 		totalGlass = 40;
-		setChanged();
-		notifyObservers(this);
+
 	}
 
 	public String getMetric() {
@@ -213,8 +240,7 @@ public class RMO extends Observable implements Serializable{
 		chartTitle = title;
 		this.metric = metric;
 		this.timeframe = timeframe;
-		setChanged();
-		notifyObservers(this);
+
 	}
 
 	public ArrayList<String> getIDs(){
@@ -234,3 +260,5 @@ public class RMO extends Observable implements Serializable{
 	}
 
 }
+	
+

@@ -23,9 +23,9 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItems.put("Plastic" , 1.50);
 		acceptableItems.put("Glass" , 1.0);
 		acceptableItemsWeight = new HashMap<String, Double>();
-		acceptableItemsWeight.put("Aluminum", 0.0364865);
-		acceptableItemsWeight.put("Plastic", 0.0279987);
-		acceptableItemsWeight.put("Glass", 0.440925);
+		acceptableItemsWeight.put("Aluminum", 0.036);
+		acceptableItemsWeight.put("Plastic", 0.027);
+		acceptableItemsWeight.put("Glass", 0.440);
 		validator = new ItemValidator();
 		typeOfRecyclableItem = typeOfItem;
 		currentAmount = new Payment();
@@ -37,6 +37,9 @@ public class RecyclableItem implements ItemForRecycle {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	public double getPayingAmountForItem(){
+		return acceptableItems.get(typeOfRecyclableItem);
+	}
 	public String getTypeOfItem(){
 		return typeOfRecyclableItem; 
 	}
@@ -45,6 +48,10 @@ public class RecyclableItem implements ItemForRecycle {
 	}
 	public double getWeight(){
 		return weight;
+	}
+	
+	public void addWeight(double weight){
+		this.weight += weight;
 	}
 
 	public void addAcceptableItems(String newType, double value){
@@ -55,6 +62,7 @@ public class RecyclableItem implements ItemForRecycle {
 	{    
 		if(validator.validateItem(acceptableItems,typeOfRecyclableItem)){
 	 		setQuantity(getQuantity() + 1);
+	 		addWeight(acceptableItemsWeight.get(typeOfRecyclableItem));
 	 		return true;
 		}
 		else{

@@ -1,13 +1,18 @@
 package rmos;
 
 import java.io.Serializable;
-
+import rcm.*;
 
 public class TypeofItem implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private double price;
+	
+	 
+	
+	// test = new
+	
 
 	/**
 	 * Creates new item type with given fields
