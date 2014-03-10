@@ -37,6 +37,8 @@ class RCMUI extends JPanel {
     JTextArea body;
     JLabel machineIDLabel;
     JLabel title;
+    JButton addItemButton,helpButton;
+    JButton aluminumButton,plasticButton,glassButton;
     
     public RCMUI(RecyclingMachine rcm){
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));	
@@ -44,30 +46,56 @@ class RCMUI extends JPanel {
     	machineIDLabel = new JLabel("Recycling Machine ID");
     	machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     
-    	title = new JLabel("Recycling Machine");
-   
-    	
+    	title = new JLabel("Recycling Machine"); 	
     	messageTextArea = new JTextArea();
     	setBackground(Color.lightGray);
-
         body = new JTextArea(10,20);
-        
-    	setBorderLayout();
+        addItemButton = new JButton("Add Item");
+    	helpButton = new JButton("Help");
+    	helpButton.setSize(new Dimension(20, 20));
+        aluminumButton = new JButton("Aluminum Cans");
+        aluminumButton.setPreferredSize(new Dimension(50, 80));
+        plasticButton = new JButton("Plastic Bottles");
+        glassButton = new JButton("Glass Bottles");
+      //  setSelectionMenu();
+        setBorderLayout();
     }    
        
- 	private void setBorderLayout()
- 	{	
+ 	private void setSelectionMenu(){
  		
  		inputpanel.setLayout(new BorderLayout());
+ 		
+ 		inputpanel.add(title,BorderLayout.NORTH);
+ 	//	inputpanel.add(aluminumButton,BorderLayout.CENTER);
+ 	//	inputpanel.add(plasticButton,BorderLayout.CENTER);
+ 	//	inputpanel.add(glassButton,BorderLayout.CENTER);
+ 	}
+ 	private void setBorderLayout()
+ 	{	
+ 		JPanel innerGrid = new JPanel(new GridLayout(1,3));
+ 		inputpanel.setLayout(new BorderLayout());
+ 		inputpanel.setSize(400,700);
+ 		System.out.println(inputpanel.getSize());
+ 		innerGrid.add(aluminumButton);
+ 		innerGrid.add(plasticButton);
+ 		innerGrid.add(glassButton);
  		//inputpanel.add(messageTextArea);
  		inputpanel.add(title,BorderLayout.NORTH);
- 		inputpanel.add(body,BorderLayout.CENTER);
+ 		inputpanel.add(innerGrid,BorderLayout.CENTER);
+ 		//inputpanel.add(addItemButton,BorderLayout.CENTER);
+ 		//inputpanel.add(aluminumButton,BorderLayout.CENTER);
+ 	 	//inputpanel.add(plasticButton,BorderLayout.CENTER);
+ 	 	//inputpanel.add(glassButton,BorderLayout.CENTER);
  		inputpanel.add(machineIDLabel,BorderLayout.WEST);
+ 		inputpanel.add(helpButton,BorderLayout.SOUTH);
+ 		
+ 		
  
- 	
  		add(inputpanel);
-		 		
+ 	//	createSelectionMenu();
+ 		
  	}
+
  }
 
 class RMOSUI extends JPanel {
@@ -79,6 +107,8 @@ class RMOSUI extends JPanel {
 
     
     public RMOSUI(){
+    	
+    	
     	
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	messageTextArea = new JTextArea();
@@ -132,21 +162,27 @@ public class RecyclingSystem {
 		Session s1 = new Session();
 		s1.addRecyclableItem("Aluminum");
 		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
-		s1.addItem("Aluminum");
 		s1.addRecyclableItem("Plastic");
 		s1.addItem("Plastic");
-		s1.addItem("Plastic");
-		s1.addItem("Plastic");
-		s1.addRecyclableItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Glass");
-		s1.addItem("Aluminum");
+
 		System.out.println(s1.updateTotalAmount());
-		*/
+		
+		
+		RecyclingMachine rcm = new RecyclingMachine();
+		
+		rcm.initiateSession("Aluminum");
+		rcm.addItem();
+		rcm.initiateSession("Plastic");
+		rcm.addItem();
+		rcm.addItem();
+		rcm.addItem();
+		rcm.addItem();
+		
+		
+		System.out.println(rcm.payCustomer());
+		//System.out.println(rcm.getAvailableCash());
+		
+		 */
 		RecyclingMachine rcm = new RecyclingMachine();
 		new RecyclingSystem(rcm);
 		

@@ -14,26 +14,34 @@ public class Session {
 		if(objectCounter>0){
 			recyclableItemList[objectCounter] = new RecyclableItem(itemType);
 			objectCounter++;
+			
 		}
 		else{
 			recyclableItemList[objectCounter] = new RecyclableItem(itemType);
 			objectCounter++;
+		
 		}
+		
 	}
 	
 	public double updateTotalAmount(){
+		double temp = 0;
 		for (int i=0;i<objectCounter;i++){
-			totalAmount.addAmount(recyclableItemList[i].getPaymentAmount());
-			
+			temp += recyclableItemList[i].getPaymentAmount();
 		}
+		totalAmount.setAmount(temp);
 		return totalAmount.getAmount();
 	}
-	public void addItem(String nameOfItem){
+	public boolean addItem(String nameOfItem){
 		for (int i=0;i<objectCounter;i++){
 			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
-				recyclableItemList[i].addItem();
-				
+				if(recyclableItemList[i].addItem()){
+					return true;
+				}
 			}
 		}
+		return false;
 	}
+	
+	
 }
