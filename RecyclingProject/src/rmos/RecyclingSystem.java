@@ -11,25 +11,21 @@ import rcm.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.ImageIcon;
 
-//testing again if this works
-
-
 
 class RCMUI extends JPanel {
 	
 	private RecyclingMachine rcm;
 	JPanel inputpanel = new JPanel();
-    JTextArea messageTextArea;
+    JTextArea messageTextArea,totalAmount;
     JTextArea body;
     JLabel machineIDLabel;
-    JLabel title;
+    JLabel title,logo;
     JButton addItemButton,helpButton,finishButton;
     JButton aluminumButton,plasticButton,glassButton;
     ImageIcon icon;
@@ -39,39 +35,30 @@ class RCMUI extends JPanel {
     	this.rcm = rcm;
     	//machineIDLabel = new JLabel("Recycling Machine ID");
     	//machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-   
-    	setBackground(Color.lightGray);
-        
-    	helpButton = new JButton("Help");
-    	helpButton.setSize(new Dimension(20, 20));
-       
-      //  setSelectionMenu();
+    	
         setRCMcontrol();
     }    
        
- 	private void setSelectionMenu(){
- 		
- 		inputpanel.setLayout(new BorderLayout());
- 		
- 		inputpanel.add(title,BorderLayout.NORTH);
- 
- 	}
  	private void setRCMcontrol()
  	{	
+ 		JPanel titlePanel = createTitle();
  		JPanel buttonPanel = createItemButtons();
  		JPanel itemcountPanel = createItemCount();
  		JPanel addPanel = createControlButtons();
- 		JPanel titlePanel = createTitle();
+ 		JPanel helpPanel = createHelpButton();
+ 		
  		JPanel inputpanel = new JPanel(new GridLayout(5,1));
  			
  		inputpanel.add(titlePanel);
  		inputpanel.add(buttonPanel);
  	//	inputpanel.add(machineIDLabel);
  		inputpanel.add(itemcountPanel);
+ 		
  		inputpanel.add(addPanel);
- 		inputpanel.add(helpButton,BorderLayout.SOUTH);
+ 		inputpanel.add(helpPanel);
 
- 		inputpanel.setBorder(new EmptyBorder(100, 100, 100, 100));
+ 		inputpanel.setBorder(new EmptyBorder(20, 100, 30, 100));
+ 		
  		add(inputpanel);
 
  		
@@ -79,26 +66,22 @@ class RCMUI extends JPanel {
  	
  	public JPanel createTitle(){
  		JPanel panel = new JPanel();
- 		icon = createImageIcon("images/recycling.png","Recycling Symbol");
- 	//	if(icon ==  null){System.out.println("File not found or accessibleContext."); return panel;}
- 		title = new JLabel("Recycling Machine",icon,JLabel.CENTER); 	
+ 		panel.setLayout(new BorderLayout());
+ 		Font font = new Font("Verdana", Font.BOLD, 30);
+ 		icon = createImageIcon("/images/recycling.png","Recycling Symbol");
+ 		//if(icon ==  null){System.out.println("File not found or accessibleContext."); return panel;}
+ 		logo = new JLabel(icon,JLabel.CENTER);
+ 		title = new JLabel("Recycling Machine"); 	
     	title.setVerticalAlignment(JLabel.TOP);
     	title.setHorizontalAlignment(JLabel.CENTER);
- 		
+    	title.setFont(font);
+    
+    	title.setBorder(new EmptyBorder(5, 5, 5, 5));
+ 		panel.add(title,BorderLayout.NORTH);
+ 		panel.add(logo,BorderLayout.SOUTH);
  		return panel;
  	}
  	
- 	private ImageIcon createImageIcon(String path, String description) {
- 		
- 		java.net.URL imgURL = getClass().getResource(path);
- 		if (imgURL != null) {
- 			return new ImageIcon(imgURL, description);
- 		} else {
- 			System.err.println("Couldn't find file: " + path);
- 			return null;
- 		}
-	}
-
 	public JPanel createItemButtons(){
  		
  		JPanel panel = new JPanel();
@@ -117,29 +100,63 @@ class RCMUI extends JPanel {
  	
  	public JPanel createItemCount(){
  		JPanel panel = new JPanel();
- 		panel.setLayout(new GridLayout(1,1));
- 	//	JLabel label = new JLabel("");
+ 		panel.setLayout(new BorderLayout());
+ 		JPanel innerpanel = new JPanel(new GridLayout(1,2));
+ 		JLabel label = new JLabel("Total");
+ 		label.setHorizontalAlignment(JLabel.RIGHT);
+ 	
+ 		
  		messageTextArea = new JTextArea();
  		messageTextArea.setEditable(false);
  		messageTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));	
- 		panel.add(messageTextArea);
+ 		
+ 		panel.add(messageTextArea,BorderLayout.CENTER);
+ 		
+ 		totalAmount = new JTextArea("$ ");
+ 		totalAmount.setEditable(false);
+ 		totalAmount.setBorder(BorderFactory.createLineBorder(Color.BLACK));	
+ 		innerpanel.add(label);
+ 		innerpanel.add(totalAmount);
+ 		innerpanel.setBorder(new EmptyBorder(5, 5, 5, 0));
+ 		panel.add(innerpanel,BorderLayout.SOUTH);
+
  		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+ 		
  		return panel;
  	}
  	
+
+ 	
  	public JPanel createControlButtons(){
  		JPanel panel = new JPanel();
- 		panel.setLayout(new BorderLayout());
+ 		panel.setLayout(new GridLayout(1,2));
  		finishButton = new JButton("Finish");
- 		finishButton.setPreferredSize(new Dimension(90, 40));
+ 		//finishButton.setPreferredSize(new Dimension(90, 40));
  		addItemButton = new JButton("Add Item");
- 		addItemButton.setPreferredSize(new Dimension(90,40));
- 		panel.add(addItemButton,BorderLayout.WEST);
- 		panel.add(finishButton,BorderLayout.EAST);
+ 	//	addItemButton.setPreferredSize(new Dimension(90,40));
+ 		panel.add(addItemButton);
+ 		panel.add(finishButton);
  		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
  		return panel;
  	}
-
+ 	public JPanel createHelpButton(){
+ 		JPanel panel = new JPanel();
+ 		panel.setLayout(new BorderLayout());
+ 		helpButton = new JButton("Help");
+    	helpButton.setSize(new Dimension(20, 20));
+ 		panel.add(helpButton,BorderLayout.SOUTH);
+ 		return panel;
+ 	}
+ 	
+ 	private ImageIcon createImageIcon(String path, String description) {
+ 		java.net.URL imgURL = getClass().getResource(path);
+ 		if (imgURL != null) {	
+ 			return new ImageIcon(imgURL, description);
+ 		} else {
+ 			System.err.println("Couldn't find file: " + path);
+ 			return null;
+ 		}
+	}
  }
 
 class RMOSUI extends JPanel {
