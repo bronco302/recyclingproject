@@ -9,7 +9,8 @@ public class RecyclableItem implements ItemForRecycle {
 	private Payment currentAmount;
 	private ItemValidator validator; 
 	protected Map<String, Double> acceptableItemsWeight; 
-	protected Map<String, Double> acceptableItems ;
+	protected Map<String, Double> acceptableItems ; 
+	public ArrayList<RecyclableItem> listOfItems = new ArrayList<RecyclableItem>(); 
 	
 	
 	public RecyclableItem(){
@@ -67,6 +68,26 @@ public class RecyclableItem implements ItemForRecycle {
 		return currentAmount.getAmount();
 
 	}
+	
+	public ArrayList<RecyclableItem> showRecyclableItemList(){
+		return listOfItems;
+	}	
+	
+	public void setWeight(Double w) {
+		this.weight = w;
+	}
+
+	 public void addRecyclableItem(RecyclableItem item){
+		//checks if the itemType don't already exist 
+		 if(this.listOfItems.indexOf(item)==-1) {
+			 this.listOfItems.add(item);
+			   System.out.print("= Adding item type: "+item.typeOfRecyclableItem+"\n");
+		 }
+	 }
+	 
+	
+
+
 	
 
 

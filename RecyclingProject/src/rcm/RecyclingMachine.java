@@ -25,14 +25,15 @@ public class RecyclingMachine extends Observable{
     private boolean active; 
     private String machine_health; 
     private Session transaction; 
+    public String Status; 
     Random generator = new Random(); 
     
     public RecyclingMachine(){
     	machineID = generator.nextInt(89999) + 10000;
     	active = true;	
     	transaction = new Session();
+    	this.Status = "Disabled"; 
     }
-    
     
     public int getMachineID(){
     	return machineID;
@@ -45,6 +46,8 @@ public class RecyclingMachine extends Observable{
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+
 
 }
     
