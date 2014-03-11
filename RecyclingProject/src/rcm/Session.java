@@ -62,6 +62,17 @@ public class Session {
 		return 0;
 	}
 	
+	public double weightByType(String nameOfItem){
+		double weight=0;
+		for (int i=0;i<objectCounter;i++){
+			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
+				return recyclableItemList[i].weightByType();
+			}
+		}
+		return weight;
+		
+	}
+	
 	public double getPayingAmountForItem(String nameOfItem){
 		for (int i=0;i<objectCounter;i++){
 			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
@@ -69,6 +80,21 @@ public class Session {
 			}
 		}
 		return 0;
+	}
+	
+	public void clearData(){
+		for (int i=0;i<objectCounter;i++){
+			recyclableItemList[i].clear();
+		}
+		
+	}
+	
+	public double totalWeight(){
+		double weight = 0;
+		for (int i=0;i<objectCounter;i++){
+			weight += recyclableItemList[i].getWeight();
+		}
+		return weight;
 	}
 	
 	

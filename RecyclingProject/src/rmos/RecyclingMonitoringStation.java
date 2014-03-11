@@ -90,13 +90,25 @@ public class RecyclingMonitoringStation {
 		}
 	}
 	
-	public void getMachineIDS(){
+	public String getMachineIDS(){
+		StringBuilder tempBuilder = new StringBuilder();
+	
 		for (int i=0;i<objectCounter;i++){
 				if(registeredMachines[i].getGroup()==1){
-				System.out.println(registeredMachines[i].getMachineID());	
+					if(i == (objectCounter-1)){
+						tempBuilder.append(registeredMachines[i].getMachineID());
+					}
+					else{
+						tempBuilder.append(registeredMachines[i].getMachineID()+",");
+					}
 				}
 		}
+	
+		return tempBuilder.toString();
+		
 	}
+	
+	
 	
 	public void print(int id){
 		System.out.println(queryMachine(id));

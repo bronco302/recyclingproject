@@ -8,5 +8,8 @@ public interface ItemForRecycle {
 	public void addAcceptableItems(String newType, double value);
 	public int getQuantity();
 	public double getWeight();
+	public double weightByType();
 	public double getPayingAmountForItem();
+	public void clear();
+//	public double totalWeight();
 }

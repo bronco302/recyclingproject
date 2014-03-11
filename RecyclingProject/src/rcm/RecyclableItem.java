@@ -4,7 +4,7 @@ import java.util.*;
 
 public class RecyclableItem implements ItemForRecycle {
 	private String typeOfRecyclableItem;
-	private double weight = 0;
+	private double weight = 0.0;
 	private int quantity = 0; 
 	private Payment currentAmount;
 	private ItemValidator validator; 
@@ -21,11 +21,11 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItems = new HashMap<String, Double>();
 		acceptableItems.put("Aluminum" , 2.0);
 		acceptableItems.put("Plastic" , 1.50);
-		acceptableItems.put("Glass" , 1.0);
+		acceptableItems.put("Glass" , 0.0);
 		acceptableItemsWeight = new HashMap<String, Double>();
-		acceptableItemsWeight.put("Aluminum", 0.036);
-		acceptableItemsWeight.put("Plastic", 0.027);
-		acceptableItemsWeight.put("Glass", 0.440);
+		acceptableItemsWeight.put("Aluminum", 0.04);
+		acceptableItemsWeight.put("Plastic", 0.03);
+		acceptableItemsWeight.put("Glass", 0.44);
 		validator = new ItemValidator();
 		typeOfRecyclableItem = typeOfItem;
 		currentAmount = new Payment();
@@ -50,8 +50,15 @@ public class RecyclableItem implements ItemForRecycle {
 		return weight;
 	}
 	
+	public void setWeight(double weight){
+		this.weight=weight;
+	}
 	public void addWeight(double weight){
 		this.weight += weight;
+	}
+	
+	public double weightByType(){
+		return acceptableItemsWeight.get(typeOfRecyclableItem);
 	}
 
 	public void addAcceptableItems(String newType, double value){
@@ -95,7 +102,11 @@ public class RecyclableItem implements ItemForRecycle {
 		 }
 	 }
 	 
-	
+	public void clear(){
+		setWeight(0);
+		setQuantity(0);
+		
+	}
 
 
 	

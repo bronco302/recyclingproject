@@ -1,5 +1,6 @@
 package rcm; 
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -23,18 +24,26 @@ public class RecyclingMachine extends Observable{
     private boolean active;
     private String selectedItemType;
     private Payment availableCash;
+    private String location;
     private int group = 1; 
     private Session transaction; 
     private String Status;
-    Random generator = new Random(); 
+    private Timestamp lastEmptied; 
+    private Date date= new Date();
+	private long time; 
+    private double weightCapacity = 1.0;
+    private double currentWeight = 0.0;
+    private boolean full;
+    private Random generator = new Random(); 
     
     public RecyclingMachine(){
     	machineID = generator.nextInt(89999) + 10000;
     	active = true;	
     	transaction = new Session();
-
+    	time = date.getTime();
+    	lastEmptied = new Timestamp(time);
+    	setLocation(new String("Santa Clara"));
     	this.Status = "Enabled"; 
-
     	availableCash = new Payment(.2);
 
     }
@@ -62,8 +71,20 @@ public class RecyclingMachine extends Observable{
 	
 	}
 	
-	public void addItem(){
-		transaction.addItem(getSelectedItemType());
+	public int addItem(){
+		if(currentWeight<weightCapacity){
+			//System.out.println(currentWeight);
+			transaction.addItem(getSelectedItemType());
+			currentWeight += transaction.weightByType(getSelectedItemType());
+			
+			//System.out.println(transaction.getWeight(getSelectedItemType()));
+			return 1;
+		}
+		else{
+			full=true;
+			return 0;
+			
+		}
 	}
 	
 	public String getCurrentAmount(){
@@ -77,14 +98,15 @@ public class RecyclingMachine extends Observable{
 	public double payCustomer(){
 		if(checkFunds(transaction.updateTotalAmount())){
 			availableCash.subAmount(transaction.updateTotalAmount());
-			
 			return transaction.updateTotalAmount();
 		}
 		else{
-			System.out.println("Due to insufficient funds, we will give you a coupon redeemable at any store for the same cash value.");
+			
 			return 0;
+			
 			//Pay amount in coupon value. 
 		}
+		
 	}
 	
 	public boolean checkFunds(double tobepaid){
@@ -108,10 +130,18 @@ public class RecyclingMachine extends Observable{
 		return transaction.getQuantity(selectedItemType);
 	}
 	
+	public int getQuantity(String type){
+		return transaction.getQuantity(type);
+	}
+	
 	public String getWeight(){
 		DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits(2);
 		return format.format(transaction.getWeight(selectedItemType));		
+	}
+	
+	public double getTransactionWeight(){
+		return transaction.totalWeight();
 	}
 
 	public String getPaymentForItem(){
@@ -126,6 +156,43 @@ public class RecyclingMachine extends Observable{
 
 	public void setGroup(int group) {
 		this.group = group;
+	}
+	
+	public void clearData(){
+		transaction.clearData();
+	}
+	public void emptyMachine(){
+		Date date= new Date();
+		time = date.getTime();
+		lastEmptied = new Timestamp(time);
+	}
+	
+	public Timestamp getLastEmptiedDate(){
+		return lastEmptied;
+	}
+
+	public double getCurrentWeight() {
+		return currentWeight;
+	}
+
+	public void setCurrentWeight(double currentWeight) {
+		this.currentWeight = currentWeight;
+	}
+
+	public double getWeightCapacity() {
+		return weightCapacity;
+	}
+
+	public void setWeightCapacity(double weightCapacity) {
+		this.weightCapacity = weightCapacity;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

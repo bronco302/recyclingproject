@@ -21,7 +21,7 @@ public class ItemValidator extends RecyclableItem{
 	}
 
 	public boolean validateItem(Map<String, Double> acceptableItems,String type){
-		System.out.println(acceptableItems.get(type));
+		
 		if (acceptableItems.get(type)==0){
 			return false;
 		}
