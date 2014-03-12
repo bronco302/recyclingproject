@@ -15,7 +15,7 @@ public class Admin implements Serializable{
 	}
 
 	public Admin(){
-		username = "Michael Fox";
+		username = "admin";
 		password = "password";
 	}
 
@@ -33,6 +33,15 @@ public class Admin implements Serializable{
 
 	public void setPassword(String password){
 		this.password = password;
+	}
+	
+	public boolean validate(String username, String password){
+		if(this.username.equals(username)&&(this.password.equals(password))){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 }

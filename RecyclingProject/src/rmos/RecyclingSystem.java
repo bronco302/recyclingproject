@@ -273,11 +273,14 @@ class RMOSUI extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel title;
+	private JLabel title,machineIDlabel,operationalstatuslabel,moneyleftlabel,weightcapacitylabel,currentweightlabel,lastemptiedlabel;
 	private JPanel inputpanel = new JPanel();
 	private JList listofmachines;
 	private String registeredmachines[];
 	private RecyclingMonitoringStation rmos;
+	private JPanel modifierPanel;
+	private int selectedmachine;
+	
 	
    
     public RMOSUI(RecyclingMonitoringStation rmos){
@@ -285,20 +288,42 @@ class RMOSUI extends JPanel {
     	this.rmos=rmos;
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	setBackground(Color.lightGray);
-    	adminLogin();
+    	//adminLogin();
     //	if(adminLogin()){
-    //		setRMOScontrol();
+    	modifierPanel = new JPanel(new GridLayout(6,1));
+   		setRMOScontrol();
     //	}
+    //	adminLogin();
     }    
     
     private void adminLogin(){
-    	JPanel panel = new JPanel(new GridLayout(3,2));
+    	final Admin admin = new Admin();
+    	final JPanel panel = new JPanel(new GridLayout(3,2));
     	JLabel user = new JLabel("Username");
     	JLabel pass = new JLabel("Password");
     	TitledBorder title = BorderFactory.createTitledBorder("Login");
-    	JTextField username = new JTextField(5);
-    	JTextField password = new JTextField(5);
+    	final JTextField username = new JTextField(5);
+    	final JTextField password = new JTextField(5);
     	JButton submit = new JButton("Submit");
+    	submit.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			
+ 				if(admin.validate(username.getText(), password.getText())){
+ 					
+ 					setRMOScontrol();
+ 					
+ 					
+ 					
+ 				}
+ 				else
+ 				{
+ 					JOptionPane.showMessageDialog(getRootPane(),"The username and password combination are not valid. Please try again.");
+
+ 				}
+ 			
+ 			}
+    	});
+    	
     	
     	panel.add(user);
     	panel.add(username);
@@ -311,32 +336,26 @@ class RMOSUI extends JPanel {
     }
     private void setRMOScontrol()
  	{	
-    	JTabbedPane tabbedPane = new JTabbedPane();
+    	
+    	final JTabbedPane tabbedPane = new JTabbedPane();
     	JPanel machinespanel = new JPanel();
     	JPanel reportspanel = new JPanel();
     	tabbedPane.addTab("Machines",machinespanel);
     	tabbedPane.addTab("Reports",reportspanel);
  		JPanel titlePanel = createTitle();
  		JPanel machinesPanel = createMachinesList();
- 		JPanel modifierPanel = createModifier();
- 		//JPanel buttonPanel = createItemButtons();
- 		//JPanel itemcountPanel = createItemCount();
- 		//JPanel addPanel = createControlButtons();
- 		//JPanel helpPanel = createHelpButton();
+ 		JPanel addButton = createAddButton();
  		JPanel inputpanel = new JPanel(new BorderLayout());
  			
  		inputpanel.add(titlePanel,BorderLayout.NORTH);
  		inputpanel.add(machinesPanel,BorderLayout.WEST);
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
- 	//	inputpanel.add(buttonPanel);
- 	//	inputpanel.add(machineIDLabel);
- 	//	inputpanel.add(itemcountPanel);
- 	//	inputpanel.add(addPanel);
- 	//	inputpanel.add(helpPanel);
- 	//	inputpanel.setBorder(new EmptyBorder(20, 100, 30, 100));
- 		
+ 		inputpanel.add(addButton,BorderLayout.SOUTH);
+ 	
  		machinespanel.add(inputpanel);
  		add(tabbedPane);
+ 		
+ 		
  	}
     
     private JPanel createTitle(){
@@ -355,25 +374,69 @@ class RMOSUI extends JPanel {
     private JPanel createMachinesList(){
     	JPanel panel = new JPanel(new GridLayout(1,1));
     	TitledBorder title;
-    	title = BorderFactory.createTitledBorder("Registered Machines (ID)");
+    	title = BorderFactory.createTitledBorder(rmos.getLocation());
     	listofmachines = new JList(splitStringToArray(rmos.getMachineIDS()));
-    	listofmachines.setBorder(new EmptyBorder(10, 60, 100, 60));
+    	listofmachines.setBorder(new EmptyBorder(10, 25, 100, 25));
+    	listofmachines.addListSelectionListener(new ListSelectionListener(){
+    		 public void valueChanged(ListSelectionEvent arg0) {
+                 if (!arg0.getValueIsAdjusting()) {
+                	 selectedMachine((String) listofmachines.getSelectedValue());
+                	
+               // 	 JOptionPane.showMessageDialog(getRootPane(),(String) listofmachines.getSelectedValue());
+                       
+                 }
+             }
+    	});
     	panel.add(listofmachines);
     	panel.setBorder(title);
     	return panel;
     }
-    
-    private JPanel createModifier(){
-    	JPanel panel = new JPanel();
+        
+    public void selectedMachine(String machineID){
+
+    	selectedmachine = Integer.parseInt(machineID);
+    	createSettings();
     	
-    	return panel;
     	
     }
     
+    
+    
+    public void createSettings(){
+    	//JPanel panel = new JPanel(new GridLayout(3,1));
+    	modifierPanel.removeAll();
+    	machineIDlabel = new JLabel("Recycling Machine ID: "+selectedmachine+ " Location: "+rmos.getLocation());
+    	machineIDlabel.setHorizontalAlignment(JLabel.LEFT);
+    	//modifierPanel.repaint();
+    	operationalstatuslabel = new JLabel("Operational Status: "+rmos.getOperationalStatus(selectedmachine));
+    	moneyleftlabel = new JLabel("Money in Machine: "+rmos.getMoneyInMachine(selectedmachine));
+    	currentweightlabel = new JLabel("Current Weight: "+rmos.getWeightForMachine(selectedmachine));
+    	weightcapacitylabel = new JLabel("Weight Capacity: "+rmos.getWeightCapacityForMachine(selectedmachine));
+    	lastemptiedlabel = new JLabel("Last Time Emptied: "+rmos.getLastTimeEmptied(selectedmachine));
+    	
+    	modifierPanel.add(machineIDlabel);
+    	modifierPanel.add(operationalstatuslabel);
+    	modifierPanel.add(moneyleftlabel);
+    	modifierPanel.add(currentweightlabel);
+    	modifierPanel.add(weightcapacitylabel);
+    	modifierPanel.add(lastemptiedlabel);
+    	modifierPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
+    	modifierPanel.revalidate();
+    	
+    }
+    public JPanel createAddButton(){
+    	JPanel panel = new JPanel(new BorderLayout());
+    	JButton addbutton = new JButton("Add RCM");
+    	addbutton.setHorizontalAlignment(JButton.LEFT);
+    	panel.add(addbutton,BorderLayout.WEST);
+    	return panel;
+    }
     public String[] splitStringToArray(String string){
     	return string.split(",");
     }
  	
+    
+    
  }
 
 

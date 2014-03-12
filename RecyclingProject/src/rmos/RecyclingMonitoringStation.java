@@ -1,5 +1,6 @@
 package rmos;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import rcm.*;
@@ -270,7 +271,40 @@ public class RecyclingMonitoringStation {
 		}
 		return values;
 	}
-
+	public String getLocation(){
+		for (int i=0;i<objectCounter;i++){
+			return registeredMachines[i].getLocation();
+	
+		}
+		return registeredMachines[0].getLocation();
+	}
+	
+	public String getOperationalStatus(int machineID){
+		
+		 if(registeredMachines[queryMachine(machineID)].isActive()){
+			 return new String("Active");
+		 }
+		 else{
+			 return new String("Not Active");
+		 }
+	}
+	
+	public double getMoneyInMachine(int machineID){
+		return registeredMachines[queryMachine(machineID)].getAvailableCash(); 
+	}
+	
+	public double getWeightForMachine(int machineID){
+		return registeredMachines[queryMachine(machineID)].getCurrentWeight();
+	}
+	
+	public double getWeightCapacityForMachine(int machineID){
+		return registeredMachines[queryMachine(machineID)].getWeightCapacity();
+	}
+	
+	public Timestamp getLastTimeEmptied(int machineID){
+		return registeredMachines[queryMachine(machineID)].getLastEmptiedDate();
+	}
+	
 }
 	
 
