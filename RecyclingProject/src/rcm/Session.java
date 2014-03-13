@@ -97,5 +97,8 @@ public class Session {
 		return weight;
 	}
 	
+	//public boolean itemValid(String item){
+	//	return recyclableItemList[0].itemValid(item);
+	//}
 	
 }

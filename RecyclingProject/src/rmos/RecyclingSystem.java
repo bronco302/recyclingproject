@@ -12,6 +12,7 @@ import rcm.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,9 +26,12 @@ import javax.swing.JTabbedPane;
 class RCMUI extends JPanel {
 	
 	private RecyclingMachine rcm;
+	private RecyclingMonitoringStation rmos;
+	private RMOSUI rmosui;
+	
 	private ActionListener itemButtonEventHandler;
 	private StringBuilder selectedItem;
-	private JPanel inputpanel = new JPanel();
+	private JPanel inputpanel;
     private JTextArea messageTextArea,totalAmount;
     private JTextArea body;
     private JLabel machineIDLabel;
@@ -36,52 +40,40 @@ class RCMUI extends JPanel {
     private JButton aluminumButton,plasticButton,glassButton;
     private ImageIcon icon;
     
-    public RCMUI(RecyclingMachine rcm){
+    public RCMUI(RecyclingMachine rcm,RecyclingMonitoringStation rmos){
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));	
     	this.rcm = rcm;
+    	this.rmos = rmos;
+    	inputpanel = new JPanel(new GridLayout(5,1));
     	//machineIDLabel = new JLabel("Recycling Machine ID");
     	//machineIDLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-    	itemButtonEventHandler = new ItemButtonEventHandler();
+    	
     	selectedItem = new StringBuilder();
         setRCMcontrol();
     }    
     
-    class ItemButtonEventHandler implements ActionListener
-    {
+       
+    public void rmosConnection(RMOSUI rmosui){
+    	this.rmosui = rmosui;
     	
-    	public void actionPerformed(ActionEvent event)
- 	    {  
- 		
- 		   if (aluminumButton.isSelected()) { 
- 			   aluminumButton.setEnabled(false);
- 		   }
- 		//   if (plasticButton.isSelected()) { 
- 		 //   	  ecoOptions.append("Bamboo floors");
- 		 //  }		   
- 		//   if(glassButton.isSelected()){
- 			   
- 	//	   }
- 	 
- 	    }
     }
-    
-    
- 	private void setRCMcontrol()
+ 	public void setRCMcontrol()
  	{	
+ 		
  		JPanel titlePanel = createTitle();
  		JPanel buttonPanel = createItemButtons();
  		JPanel itemcountPanel = createItemCount();
  		JPanel addPanel = createControlButtons();
  		JPanel helpPanel = createHelpButton();
- 		JPanel inputpanel = new JPanel(new GridLayout(5,1));
- 			
+ 		
+ 		inputpanel.removeAll();	
  		inputpanel.add(titlePanel);
  		inputpanel.add(buttonPanel);
- 	//	inputpanel.add(machineIDLabel);
  		inputpanel.add(itemcountPanel);
  		inputpanel.add(addPanel);
  		inputpanel.add(helpPanel);
  		inputpanel.setBorder(new EmptyBorder(20, 100, 30, 100));
+ 		inputpanel.revalidate();
  		add(inputpanel);
  	}
  	
@@ -111,7 +103,7 @@ class RCMUI extends JPanel {
  		aluminumButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             { 
-            
+            	if(rcm.itemValid("Aluminum")){
                 aluminumButton.setEnabled(false);
                 plasticButton.setEnabled(true);
                 glassButton.setEnabled(true);
@@ -127,12 +119,14 @@ class RCMUI extends JPanel {
                 messageTextArea.append("\nYou've Selected Aluminum Cans, please begin inserting.");
                 selectedItem.append("\nYou've Selected Aluminum Cans, please begin inserting.");
                 */
+            	}
             }
         }); 
         plasticButton = new JButton("Plastic Bottles");
         plasticButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             { 
+            	if(rcm.itemValid("Plastic")){
             	aluminumButton.setEnabled(true);
             	plasticButton.setEnabled(false);
             	glassButton.setEnabled(true);
@@ -148,10 +142,32 @@ class RCMUI extends JPanel {
                 messageTextArea.append("\nYou've Selected Plastic Bottles, please begin inserting.");
                 selectedItem.append("\nYou've Selected Plastic Bottles, please begin inserting.");
                 */
+            	}
             }
         }); 
         glassButton = new JButton("Glass Bottles");
-        
+        glassButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            { 
+            	if(rcm.itemValid("Glass")){
+            	aluminumButton.setEnabled(true);
+            	plasticButton.setEnabled(true);
+            	glassButton.setEnabled(false);
+                addItemButton.setEnabled(true);
+               
+                rcm.initiateSession("Glass");
+                selected.setText("You've selected Glass Bottles, please begin inserting.");
+                messageTextArea.setText(selectedItem.toString());
+ 				messageTextArea.append("Quantity: "+rcm.getQuantity());
+ 				messageTextArea.append("\nWeight(lbs): "+rcm.getWeight()+" ($"+rcm.getPaymentForItem()+"/lbs)");
+ 				totalAmount.setText("$"+rcm.getCurrentAmount());
+                /*
+                messageTextArea.append("\nYou've Selected Plastic Bottles, please begin inserting.");
+                selectedItem.append("\nYou've Selected Plastic Bottles, please begin inserting.");
+                */
+            	}
+            }
+        }); 
         panel.add(aluminumButton);
         panel.add(plasticButton);
         panel.add(glassButton);
@@ -202,6 +218,8 @@ class RCMUI extends JPanel {
  		finishButton.setEnabled(false);
  		finishButton.addActionListener(new ActionListener(){
  			public void actionPerformed(ActionEvent e){
+ 				
+ 				
  				if(rcm.payCustomer()==0){
  					JOptionPane.showMessageDialog(getRootPane(),"Thank you for using our recycling services. Due to insufficient funds we will print you a coupon of equal value redeemble at any store. Coupon Value: "+rcm.getCurrentAmount());
  				}else{
@@ -220,22 +238,32 @@ class RCMUI extends JPanel {
  				aluminumButton.setEnabled(true);
  				plasticButton.setEnabled(true);
  				glassButton.setEnabled(true);
+ 				rmosui.createSettings();
+ 				}
+ 			
  				
- 			}
+ 			
  			
  		});
  		addItemButton = new JButton("Add Item");
  		addItemButton.setEnabled(false);
  		addItemButton.addActionListener(new ActionListener(){
  			public void actionPerformed(ActionEvent e){
- 				if(rcm.addItem()==0){
- 					JOptionPane.showMessageDialog(getRootPane(),"This machine is full. Please finish any current transaction and/or try again later.");
+ 				if (rcm.isActive()){
+ 					if(rcm.addItem()==0){
+ 						JOptionPane.showMessageDialog(getRootPane(),"This machine is full. Please finish any current transaction and/or try again later.");
+ 					}
+ 					finishButton.setEnabled(true);
+ 					messageTextArea.setText(selectedItem.toString());
+ 					messageTextArea.append("Quantity: "+rcm.getQuantity());
+ 					messageTextArea.append("\nWeight(lbs): "+rcm.getWeight()+" ($"+rcm.getPaymentForItem()+"/lbs)");
+ 					totalAmount.setText("$"+rcm.getCurrentAmount());
  				}
- 				finishButton.setEnabled(true);
- 				messageTextArea.setText(selectedItem.toString());
- 				messageTextArea.append("Quantity: "+rcm.getQuantity());
- 				messageTextArea.append("\nWeight(lbs): "+rcm.getWeight()+" ($"+rcm.getPaymentForItem()+"/lbs)");
- 				totalAmount.setText("$"+rcm.getCurrentAmount());
+ 				else{
+ 					finishButton.setEnabled(false);
+						JOptionPane.showMessageDialog(getRootPane(),"RCM is currently unavailable. Please try again later.");
+
+ 				}
  			}
  			
  		});
@@ -247,9 +275,31 @@ class RCMUI extends JPanel {
  	}
  	public JPanel createHelpButton(){
  		JPanel panel = new JPanel();
+ 		JPanel panel2 = new JPanel(new GridLayout(1,2));
  		panel.setLayout(new BorderLayout());
+ 		JComboBox list = new JComboBox(splitStringToArray(rmos.getMachineIDS()));
+ 		list.setSelectedIndex(0);
+ 		list.addActionListener(new ActionListener(){
+ 		   
+ 		    public void actionPerformed(ActionEvent e) {
+ 		        JComboBox cb = (JComboBox)e.getSource();
+ 		       
+			//	JOptionPane.showMessageDialog(getRootPane(),(String)cb.getSelectedItem());
+				getRCM(Integer.parseInt((String)cb.getSelectedItem()));
+				setRCMcontrol();
+				
+				
+
+ 		    }
+ 		    
+ 		});
+ 		JLabel machineidlabel = new JLabel("Machine ID: "+rcm.getMachineID());
+ 		
  		helpButton = new JButton("Help");
     	helpButton.setSize(new Dimension(20, 20));
+    	panel2.add(machineidlabel);
+    	panel2.add(list);
+    	panel.add(panel2,BorderLayout.NORTH);
  		panel.add(helpButton,BorderLayout.SOUTH);
  		return panel;
  	}
@@ -264,6 +314,15 @@ class RCMUI extends JPanel {
  		}
 	}
  	
+ 	public void getRCM(int machineID){
+ 		rcm = rmos.getRCM(machineID);
+ 		System.out.println(rcm.getMachineID());
+ 	}
+ 	
+ 	public String[] splitStringToArray(String string){
+    	return string.split(",");
+    }
+ 	
  }
 
 
@@ -273,14 +332,18 @@ class RMOSUI extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel title,machineIDlabel,operationalstatuslabel,moneyleftlabel,weightcapacitylabel,currentweightlabel,lastemptiedlabel;
-	private JPanel inputpanel = new JPanel();
+	private RCMUI rcmui;
+	private JLabel title,machineIDlabel,operationalstatuslabel,moneyleftlabel,moneycapacitylabel,weightcapacitylabel,currentweightlabel,lastemptiedlabel;
+	private JLabel machinelocationlabel;
+	private JPanel inputpanel ;
 	private JList listofmachines;
 	private String registeredmachines[];
 	private RecyclingMonitoringStation rmos;
-	private JPanel modifierPanel;
+	private JPanel modifierPanel,machinepanel;
+	private JButton activationButton,emptyrcmButton;
 	private int selectedmachine;
-	
+	private JPanel adminpanel;
+	DecimalFormat df ;
 	
    
     public RMOSUI(RecyclingMonitoringStation rmos){
@@ -288,17 +351,24 @@ class RMOSUI extends JPanel {
     	this.rmos=rmos;
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	setBackground(Color.lightGray);
+    	df = new DecimalFormat("#.##");
     	//adminLogin();
     //	if(adminLogin()){
-    	modifierPanel = new JPanel(new GridLayout(6,1));
-   		setRMOScontrol();
+    	inputpanel = new JPanel(new BorderLayout());
+    	modifierPanel = new JPanel(new GridLayout(8,2));
+    	machinepanel = new JPanel(new GridLayout(1,1));
+   	//	setRMOScontrol();
     //	}
-    //	adminLogin();
+    	adminLogin();
     }    
     
+    public void rcmConnect(RCMUI rcmui){
+    	this.rcmui = rcmui;
+    	
+    }
     private void adminLogin(){
     	final Admin admin = new Admin();
-    	final JPanel panel = new JPanel(new GridLayout(3,2));
+    	adminpanel = new JPanel(new GridLayout(3,2));
     	JLabel user = new JLabel("Username");
     	JLabel pass = new JLabel("Password");
     	TitledBorder title = BorderFactory.createTitledBorder("Login");
@@ -311,9 +381,7 @@ class RMOSUI extends JPanel {
  				if(admin.validate(username.getText(), password.getText())){
  					
  					setRMOScontrol();
- 					
- 					
- 					
+ 					return;
  				}
  				else
  				{
@@ -325,34 +393,41 @@ class RMOSUI extends JPanel {
     	});
     	
     	
-    	panel.add(user);
-    	panel.add(username);
-    	panel.add(pass);
-    	panel.add(password);
-    	panel.add(submit);
-    	panel.setBorder(title);
-    	
-    	add(panel);
+    	adminpanel.add(user);
+    	adminpanel.add(username);
+    	adminpanel.add(pass);
+    	adminpanel.add(password);
+    	adminpanel.add(submit);
+    	adminpanel.setBorder(title);
+    	inputpanel.add(adminpanel);
+    	add(adminpanel);
     }
     private void setRMOScontrol()
  	{	
+    	adminpanel.removeAll();
     	
+    	inputpanel.removeAll();
+    	//adminpanel.revalidate();
+    	createMachinesList();
     	final JTabbedPane tabbedPane = new JTabbedPane();
-    	JPanel machinespanel = new JPanel();
+    	JPanel rmospanel = new JPanel();
     	JPanel reportspanel = new JPanel();
-    	tabbedPane.addTab("Machines",machinespanel);
+    	tabbedPane.addTab("Machines",rmospanel);
     	tabbedPane.addTab("Reports",reportspanel);
  		JPanel titlePanel = createTitle();
- 		JPanel machinesPanel = createMachinesList();
  		JPanel addButton = createAddButton();
- 		JPanel inputpanel = new JPanel(new BorderLayout());
+ 		
+ 		
+ 		
  			
  		inputpanel.add(titlePanel,BorderLayout.NORTH);
- 		inputpanel.add(machinesPanel,BorderLayout.WEST);
+ 		inputpanel.add(machinepanel,BorderLayout.WEST);
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
  		inputpanel.add(addButton,BorderLayout.SOUTH);
- 	
- 		machinespanel.add(inputpanel);
+ 		inputpanel.revalidate();
+ 		adminpanel.revalidate();
+ 		rmospanel.add(inputpanel);
+ 		
  		add(tabbedPane);
  		
  		
@@ -371,8 +446,8 @@ class RMOSUI extends JPanel {
     	return panel;
     }
     
-    private JPanel createMachinesList(){
-    	JPanel panel = new JPanel(new GridLayout(1,1));
+    private void createMachinesList(){
+    	machinepanel.removeAll();
     	TitledBorder title;
     	title = BorderFactory.createTitledBorder(rmos.getLocation());
     	listofmachines = new JList(splitStringToArray(rmos.getMachineIDS()));
@@ -387,9 +462,9 @@ class RMOSUI extends JPanel {
                  }
              }
     	});
-    	panel.add(listofmachines);
-    	panel.setBorder(title);
-    	return panel;
+    	machinepanel.add(listofmachines);
+    	machinepanel.setBorder(title);
+    	machinepanel.revalidate();
     }
         
     public void selectedMachine(String machineID){
@@ -405,32 +480,91 @@ class RMOSUI extends JPanel {
     public void createSettings(){
     	//JPanel panel = new JPanel(new GridLayout(3,1));
     	modifierPanel.removeAll();
-    	machineIDlabel = new JLabel("Recycling Machine ID: "+selectedmachine+ " Location: "+rmos.getLocation());
+    	JButton aluminum = new JButton();
+    	JButton plastic = new JButton();
+    	JButton glass = new JButton();
+    	JLabel aluminumtype = new JLabel("Aluminum Cans");
+    	JLabel plastictype = new JLabel("Plastic Bottles");
+    	JLabel glasstype = new JLabel("Glass Bottles");
+    	
+    	machineIDlabel = new JLabel("Recycling Machine ID: "+selectedmachine);
     	machineIDlabel.setHorizontalAlignment(JLabel.LEFT);
+    	machinelocationlabel = new JLabel("Location: "+rmos.getLocation());
     	//modifierPanel.repaint();
+    	emptyrcmButton = new JButton("Empty RCM");
+    	emptyrcmButton.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			rmos.emptyRCM(selectedmachine);
+    			createSettings();
+    		}
+    	});
+    	activationButton = new JButton();
     	operationalstatuslabel = new JLabel("Operational Status: "+rmos.getOperationalStatus(selectedmachine));
-    	moneyleftlabel = new JLabel("Money in Machine: "+rmos.getMoneyInMachine(selectedmachine));
-    	currentweightlabel = new JLabel("Current Weight: "+rmos.getWeightForMachine(selectedmachine));
+    	if(rmos.getOperationalStatus(selectedmachine).equals("Active")){
+    		activationButton.setText("Deactivate");
+    	}
+    	else
+    	{
+    		activationButton.setText("Activate");
+    	}
+    	activationButton.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			if(activationButton.getText().equals("Deactivate")){
+    				rmos.setInactive(selectedmachine);
+    				createSettings();
+    			}
+    			else{
+    				
+    				rmos.setActive(selectedmachine);
+    				createSettings();
+    			}
+    		}
+    	});
+    	moneyleftlabel = new JLabel("Remaining Cash: "+df.format(rmos.getMoneyInMachine(selectedmachine)));
+    	moneycapacitylabel = new JLabel("Cash Capacity: "+df.format(rmos.getMoneyCapacityInMachine(selectedmachine)));
+    	currentweightlabel = new JLabel("Current Weight: "+df.format(rmos.getWeightForMachine(selectedmachine)));
     	weightcapacitylabel = new JLabel("Weight Capacity: "+rmos.getWeightCapacityForMachine(selectedmachine));
     	lastemptiedlabel = new JLabel("Last Time Emptied: "+rmos.getLastTimeEmptied(selectedmachine));
     	
     	modifierPanel.add(machineIDlabel);
+    	modifierPanel.add(machinelocationlabel);
     	modifierPanel.add(operationalstatuslabel);
+    	modifierPanel.add(activationButton);
     	modifierPanel.add(moneyleftlabel);
+    	modifierPanel.add(moneycapacitylabel);
     	modifierPanel.add(currentweightlabel);
     	modifierPanel.add(weightcapacitylabel);
     	modifierPanel.add(lastemptiedlabel);
-    	modifierPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
+    	modifierPanel.add(emptyrcmButton);
+    	modifierPanel.add(aluminumtype);
+    	modifierPanel.add(aluminum);
+    	modifierPanel.add(plastictype);
+    	modifierPanel.add(plastic);
+    	modifierPanel.add(glasstype);
+    	modifierPanel.add(glass);
+    	
+    	
+    	modifierPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
     	modifierPanel.revalidate();
     	
     }
     public JPanel createAddButton(){
     	JPanel panel = new JPanel(new BorderLayout());
     	JButton addbutton = new JButton("Add RCM");
+    	addbutton.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			rmos.addMachine();
+    			createMachinesList();
+    			rcmui.setRCMcontrol();
+    		
+    		}
+    	});
     	addbutton.setHorizontalAlignment(JButton.LEFT);
     	panel.add(addbutton,BorderLayout.WEST);
     	return panel;
     }
+    
+   
     public String[] splitStringToArray(String string){
     	return string.split(",");
     }
@@ -446,6 +580,8 @@ public class RecyclingSystem {
        
     RCMUI mainPanel;
     RMOSUI mainPanel1;
+    RCMUI rcmtemp;
+    RMOSUI rmostemp;
     public RecyclingSystem(RecyclingMachine rcm, RecyclingMonitoringStation rmos) {
         
         mainFrame = new JFrame("Auction House");
@@ -453,8 +589,13 @@ public class RecyclingSystem {
         
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        mainPanel = new RCMUI(rcm);
+        mainPanel = new RCMUI(rcm,rmos);
+       
         mainPanel1 = new RMOSUI(rmos);
+        
+        mainPanel.rmosConnection(mainPanel1);
+        mainPanel1.rcmConnect(mainPanel);
+        
    		mainFrame.setLayout(new GridLayout(1,3));
    		mainFrame.getContentPane().add(mainPanel1);
        	mainFrame.getContentPane().add(mainPanel);

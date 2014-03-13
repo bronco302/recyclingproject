@@ -24,6 +24,7 @@ public class RecyclingMachine extends Observable{
     private boolean active;
     private String selectedItemType;
     private Payment availableCash;
+    private Payment cashCapacity;
     private String location;
     private int group = 1; 
     private Session transaction; 
@@ -31,20 +32,27 @@ public class RecyclingMachine extends Observable{
     private Timestamp lastEmptied; 
     private Date date= new Date();
 	private long time; 
-    private double weightCapacity = 1.0;
+    private double weightCapacity = 5.0;
     private double currentWeight = 0.0;
     private boolean full;
     private Random generator = new Random(); 
+    private Map<String, Integer> acceptableItems ; 
     
     public RecyclingMachine(){
     	machineID = generator.nextInt(89999) + 10000;
     	active = true;	
     	transaction = new Session();
     	time = date.getTime();
-    	lastEmptied = new Timestamp(time);
+    	lastEmptied = null;
     	setLocation(new String("Santa Clara"));
     	this.Status = "Enabled"; 
-    	availableCash = new Payment(.2);
+    	availableCash = new Payment(5);
+    	cashCapacity = new Payment(5);
+    	acceptableItems = new HashMap<String, Integer>();
+    	acceptableItems.put("Aluminum" , 1);
+		acceptableItems.put("Plastic" , 1);
+		acceptableItems.put("Glass" , 1);
+    
 
     }
     
@@ -63,6 +71,10 @@ public class RecyclingMachine extends Observable{
 
 	public double getAvailableCash(){
 		return availableCash.getAmount();
+	}
+	
+	public double getCashCapacity(){
+		return cashCapacity.getAmount();
 	}
 	
 	public void initiateSession(String itemType){
@@ -165,6 +177,7 @@ public class RecyclingMachine extends Observable{
 		Date date= new Date();
 		time = date.getTime();
 		lastEmptied = new Timestamp(time);
+		currentWeight = 0.0;
 	}
 	
 	public Timestamp getLastEmptiedDate(){
@@ -194,6 +207,14 @@ public class RecyclingMachine extends Observable{
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
+	public boolean itemValid(String item){
+		if(acceptableItems.get(item)>0){
+			return true;
+		}
+		return false;
+	}
+
 
 }
     

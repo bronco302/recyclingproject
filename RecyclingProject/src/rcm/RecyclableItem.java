@@ -21,7 +21,7 @@ public class RecyclableItem implements ItemForRecycle {
 		acceptableItems = new HashMap<String, Double>();
 		acceptableItems.put("Aluminum" , 2.0);
 		acceptableItems.put("Plastic" , 1.50);
-		acceptableItems.put("Glass" , 0.0);
+		acceptableItems.put("Glass" , 1.25);
 		acceptableItemsWeight = new HashMap<String, Double>();
 		acceptableItemsWeight.put("Aluminum", 0.04);
 		acceptableItemsWeight.put("Plastic", 0.03);
@@ -63,6 +63,10 @@ public class RecyclableItem implements ItemForRecycle {
 
 	public void addAcceptableItems(String newType, double value){
 		acceptableItems.put(newType, value);
+	}
+	
+	public void updatePrice(){
+		
 	}
 	
 	public boolean addItem()
@@ -107,8 +111,8 @@ public class RecyclableItem implements ItemForRecycle {
 		setQuantity(0);
 		
 	}
-
-
+	
+	
 	
 
 

@@ -123,6 +123,17 @@ public class RecyclingMonitoringStation {
 		}
 		return id;
 	}
+	
+	public void setActive(int id){
+		registeredMachines[queryMachine(id)].setActive(true);
+	}
+	public void setInactive(int id){
+		registeredMachines[queryMachine(id)].setActive(false);
+	}
+	
+	public RecyclingMachine getRCM(int id){
+		return registeredMachines[queryMachine(id)];
+	}
 	/**
 	 * Gets rid of Machine with given id from RCM group
 	 * @param id
@@ -192,6 +203,8 @@ public class RecyclingMonitoringStation {
 		rcmGroup.get(0).getAcceptedItems().remove(itemToRemove);
 	
 	}
+	
+
 
 	public TypeofItem getGlass(){
 		return itemTypes[0];
@@ -293,6 +306,10 @@ public class RecyclingMonitoringStation {
 		return registeredMachines[queryMachine(machineID)].getAvailableCash(); 
 	}
 	
+	public double getMoneyCapacityInMachine(int machineID){
+		return registeredMachines[queryMachine(machineID)].getCashCapacity(); 
+	}
+	
 	public double getWeightForMachine(int machineID){
 		return registeredMachines[queryMachine(machineID)].getCurrentWeight();
 	}
@@ -303,6 +320,10 @@ public class RecyclingMonitoringStation {
 	
 	public Timestamp getLastTimeEmptied(int machineID){
 		return registeredMachines[queryMachine(machineID)].getLastEmptiedDate();
+	}
+	
+	public void emptyRCM(int machineID){
+		registeredMachines[queryMachine(machineID)].emptyMachine();
 	}
 	
 }

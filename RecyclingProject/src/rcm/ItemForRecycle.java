@@ -11,5 +11,6 @@ public interface ItemForRecycle {
 	public double weightByType();
 	public double getPayingAmountForItem();
 	public void clear();
+	
 //	public double totalWeight();
 }
