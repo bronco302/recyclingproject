@@ -355,7 +355,7 @@ class RMOSUI extends JPanel {
     	//adminLogin();
     //	if(adminLogin()){
     	inputpanel = new JPanel(new BorderLayout());
-    	modifierPanel = new JPanel(new GridLayout(8,2));
+    	modifierPanel = new JPanel(new GridLayout(14,2));
     	machinepanel = new JPanel(new GridLayout(1,1));
    	//	setRMOScontrol();
     //	}
@@ -480,9 +480,86 @@ class RMOSUI extends JPanel {
     public void createSettings(){
     	//JPanel panel = new JPanel(new GridLayout(3,1));
     	modifierPanel.removeAll();
+    	JPanel aluminumpricepanel = new JPanel(new GridLayout(1,2));
+    	JPanel plasticpricepanel = new JPanel(new GridLayout(1,2));
+    	JPanel glasspricepanel = new JPanel(new GridLayout(1,2));
+    	JLabel aluminumpricelabel = new JLabel("Aluminum Price: ");
+    	JLabel plasticpricelabel = new JLabel("Plastic Price: ");
+    	JLabel glasspricelabel = new JLabel("Glass Price: ");
+    	JButton updatealuminumprice = new JButton("Update Price");
+    	JButton updateplasticprice = new JButton("Update Price");
+    	JButton updateglassprice = new JButton("Update Price");
+    	JTextField aluminumpricefield = new JTextField();
+    	JTextField plasticpricefield = new JTextField();
+    	JTextField glasspricefield = new JTextField();
     	JButton aluminum = new JButton();
+    	if(rmos.isItemValid(selectedmachine, "Aluminum")){
+    		aluminum.setText("Deactivate");
+    	}
+    	else
+    	{
+    		aluminum.setText("Activate");
+    	}
+    	aluminum.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			if(rmos.isItemValid(selectedmachine, "Aluminum")){
+    				
+    				rmos.removeItem(selectedmachine, "Aluminum");
+    				createSettings();
+    			}
+    			else{
+    				
+    				rmos.addItemType(selectedmachine, "Aluminum");
+    				createSettings();
+    			}
+    		}
+    	});
     	JButton plastic = new JButton();
+    	if(rmos.isItemValid(selectedmachine, "Plastic")){
+    		plastic.setText("Deactivate");
+    	}
+    	else
+    	{
+    		plastic.setText("Activate");
+    	}
+    	plastic.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			if(rmos.isItemValid(selectedmachine, "Plastic")){
+    				
+    				rmos.removeItem(selectedmachine, "Plastic");
+    				createSettings();
+    			}
+    			else{
+    				
+    				
+    				rmos.addItemType(selectedmachine, "Plastic");
+    				createSettings();
+    			}
+    		}
+    	});
     	JButton glass = new JButton();
+    	if(rmos.isItemValid(selectedmachine, "Glass")){
+    		glass.setText("Deactivate");
+    	}
+    	else
+    	{
+    		glass.setText("Activate");
+    	}
+    	glass.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			if(rmos.isItemValid(selectedmachine, "Glass")){
+    				
+    				rmos.removeItem(selectedmachine, "Glass");
+    				createSettings();
+    			}
+    			else{
+    				
+    				
+    				rmos.addItemType(selectedmachine, "Glass");
+    				createSettings();
+    			}
+    		}
+    	});
     	JLabel aluminumtype = new JLabel("Aluminum Cans");
     	JLabel plastictype = new JLabel("Plastic Bottles");
     	JLabel glasstype = new JLabel("Glass Bottles");
@@ -542,6 +619,28 @@ class RMOSUI extends JPanel {
     	modifierPanel.add(plastic);
     	modifierPanel.add(glasstype);
     	modifierPanel.add(glass);
+    	
+    	aluminumpricepanel.add(aluminumpricelabel);
+    	aluminumpricepanel.add(aluminumpricefield);
+    	modifierPanel.add(aluminumpricepanel);
+    	modifierPanel.add(updatealuminumprice);
+    	plasticpricepanel.add(plasticpricelabel);
+    	plasticpricepanel.add(plasticpricefield);
+    	modifierPanel.add(plasticpricepanel);
+    	modifierPanel.add(updateplasticprice);
+    	glasspricepanel.add(glasspricelabel);
+    	glasspricepanel.add(glasspricefield);
+    	modifierPanel.add(glasspricepanel);
+    	modifierPanel.add(updateglassprice);
+    	
+    	//modifierPanel.add(aluminumpricelabel);
+    	//modifierPanel.add(aluminumpricefield);
+    //	modifierPanel.add(plasticpricelabel);
+    //	modifierPanel.add(plasticpricefield);
+    //	modifierPanel.add(glasspricelabel);
+    //	modifierPanel.add(glasspricefield);
+
+  
     	
     	
     	modifierPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

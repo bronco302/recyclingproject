@@ -44,12 +44,7 @@ public class RecyclingMonitoringStation {
 		chartTitle = "Value By Day";
 	}
 
-	/**
-	 * Verifies username and password
-	 * @param username
-	 * @param password
-	 * @return True if username and password match a manager in the system, False otherwise
-	 */
+	
 	public boolean authenticate(String username, String password){
 		for (Admin m: managers){ 
 			if(m.getUsername().equals(username) && m.getPassword().equals(password)) return true;
@@ -113,6 +108,18 @@ public class RecyclingMonitoringStation {
 	
 	public void print(int id){
 		System.out.println(queryMachine(id));
+	}
+	
+	public boolean isItemValid(int id,String item){
+		return registeredMachines[queryMachine(id)].itemValid(item);
+	}
+	
+	public void removeItem(int id,String item){
+		registeredMachines[queryMachine(id)].removeItemType(item);
+	}
+	
+	public void addItemType(int id, String item){
+		registeredMachines[queryMachine(id)].addItemType(item);
 	}
 	
 	public int queryMachine(int id){

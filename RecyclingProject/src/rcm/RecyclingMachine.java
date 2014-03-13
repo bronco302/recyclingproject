@@ -51,7 +51,7 @@ public class RecyclingMachine extends Observable{
     	acceptableItems = new HashMap<String, Integer>();
     	acceptableItems.put("Aluminum" , 1);
 		acceptableItems.put("Plastic" , 1);
-		acceptableItems.put("Glass" , 1);
+		acceptableItems.put("Glass" , 0);
     
 
     }
@@ -214,6 +214,15 @@ public class RecyclingMachine extends Observable{
 		}
 		return false;
 	}
+	
+	public void removeItemType(String item){
+		acceptableItems.put(item, 0);
+	}
+	
+	public void addItemType(String item){
+		acceptableItems.put(item, 1);
+	}
+
 
 
 }
