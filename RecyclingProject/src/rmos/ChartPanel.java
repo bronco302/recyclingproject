@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ChartPanel extends JPanel {
@@ -44,7 +45,7 @@ public class ChartPanel extends JPanel {
 
     Font titleFont = new Font("SansSerif", Font.BOLD, 20);
     FontMetrics titleFontMetrics = g.getFontMetrics(titleFont);
-    Font labelFont = new Font("SansSerif", Font.PLAIN, 10);
+    Font labelFont = new Font("SansSerif", Font.PLAIN, 15);
     FontMetrics labelFontMetrics = g.getFontMetrics(labelFont);
 
     int titleWidth = titleFontMetrics.stringWidth(title);
@@ -78,7 +79,10 @@ public class ChartPanel extends JPanel {
       g.drawRect(valueX, valueY, barWidth - 2, height);
       int labelWidth = labelFontMetrics.stringWidth(names[i]);
       x = i * barWidth + (barWidth - labelWidth) / 2;
-      g.drawString(names[i], x, y);
+      g.drawString(names[i]+" "+values[i], x, y);
     }
+    
+ 
   }
+  
 }

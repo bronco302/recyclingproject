@@ -161,6 +161,12 @@ public class RecyclingMachine extends Observable{
 		return format.format(transaction.getPayingAmountForItem(item));
 	}
 	
+	public String getCurrentTotalForItem(String item){
+		DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+		return format.format(transaction.getCurrentAmountForItem(item));
+	}
+	
 	public void updatePaymentForItem(String item,double amount){
 		transaction.updatePayingAmountForItem(item, amount);
 	}

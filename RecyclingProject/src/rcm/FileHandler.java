@@ -34,7 +34,7 @@ public class FileHandler {
 
 	//	for(i=0;i<10;i++)
 	//	{
-		    f0.write(rcm.getMachineID()+","+rcm.getLocation()+","+new Timestamp(time)+","+rcm.getLastEmptiedDate()+","+rcm.getQuantity("Aluminum")+","+rcm.getQuantity("Plastic")+","+rcm.getQuantity("Glass")+","+rcm.getTransactionWeight()+","+rcm.getCurrentAmount()+newLine);
+		    f0.write(rcm.getMachineID()+","+rcm.getLocation()+","+new Timestamp(time)+","+rcm.getLastEmptiedDate()+","+rcm.getQuantity("Aluminum")+","+rcm.getQuantity("Plastic")+","+rcm.getQuantity("Glass")+","+rcm.getTransactionWeight()+","+rcm.getCurrentAmount()+","+rcm.getCurrentTotalForItem("Aluminum")+","+rcm.getCurrentTotalForItem("Plastic")+","+rcm.getCurrentTotalForItem("Glass")+newLine);
 	//	}
 		f0.close();
 	}

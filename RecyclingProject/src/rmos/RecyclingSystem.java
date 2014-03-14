@@ -12,8 +12,12 @@ import rcm.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -338,12 +342,15 @@ class RMOSUI extends JPanel {
 	private JLabel machinelocationlabel;
 	private JPanel inputpanel,statspanel ;
 	private JList listofmachines;
+	
 	private String registeredmachines[];
 	private RecyclingMonitoringStation rmos;
 	private JPanel modifierPanel,machinepanel;
 	private JButton activationButton,emptyrcmButton;
-	private int selectedmachine;
+	private int selectedmachine,selectedgraph;
 	private JPanel adminpanel;
+	private double[] totalAmountOfItems;
+	private double[] totalAmountPaidByItem;
 	private BarChart chart;
 	DecimalFormat df ;
 	
@@ -383,7 +390,12 @@ class RMOSUI extends JPanel {
     			
  				if(admin.validate(username.getText(), password.getText())){
  					
- 					setRMOScontrol();
+ 					try {
+						setRMOScontrol();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
  					return;
  				}
  				else
@@ -405,10 +417,11 @@ class RMOSUI extends JPanel {
     	inputpanel.add(adminpanel);
     	add(adminpanel);
     }
-    private void setRMOScontrol()
+    private void setRMOScontrol() throws IOException
  	{	
     	adminpanel.removeAll();
     	inputpanel.removeAll();
+    	
     	JPanel rmospanel = new JPanel();
     	JPanel reportspanel = new JPanel();
     	
@@ -424,19 +437,7 @@ class RMOSUI extends JPanel {
 		chart.addBar(Color.BLUE, 14);
 		*/
     	//adminpanel.revalidate();
-    	double[] values = new double[3];
-        String[] names = new String[3];
-        values[0] = 1;
-        names[0] = "Item 1";
-
-        values[1] = 2;
-        names[1] = "Item 2";
-
-        values[2] = 4;
-        names[2] = "Item 3";
-        
-        //reportspanel.setPreferredSize(new Dimension(500,500));
- 		statspanel.add(new ChartPanel(values, names, "title"),BorderLayout.CENTER);
+    	
     	createMachinesList();
     	
     	final JTabbedPane tabbedPane = new JTabbedPane();
@@ -451,21 +452,129 @@ class RMOSUI extends JPanel {
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
  		inputpanel.add(addButton,BorderLayout.SOUTH);
  	
- 		adminpanel.revalidate();
+ 		
+ 		
+       
+        //reportspanel.setPreferredSize(new Dimension(500,500));
+        
+ 		//statspanel.add(new ChartPanel(values, names, "title"),BorderLayout.CENTER);
+ 		//System.out.println(chart.);
+ 		
+ 		setReportcontrol();
+ 		rmospanel.add(inputpanel);
+ 		//reportspanel.add(statspanel);
+ 		
+ 		tabbedPane.addTab("Machines",rmospanel);
+    	tabbedPane.addTab("Reports",statspanel);
+    	adminpanel.revalidate();
  		inputpanel.revalidate(); 
  		
- 		//System.out.println(chart.);
- 		;
- 		
- 		rmospanel.add(inputpanel);
- 		reportspanel.add(statspanel);
- 		tabbedPane.addTab("Machines",rmospanel);
-    	tabbedPane.addTab("Reports",reportspanel);
  		add(tabbedPane);
  		
  		
  	}
     
+    public void setReportcontrol(){
+    	
+    	
+    	statspanel.removeAll();
+    	
+    	String[] graphNames = new String[2];
+    	graphNames[0] = "Total Amount Collected in RCM Group";
+    	graphNames[1] = "Total Value Paid by Type";
+    	JComboBox list = new JComboBox(graphNames);
+ 		
+ 		list.addActionListener(new ActionListener(){
+ 		   
+ 		    public void actionPerformed(ActionEvent e) {
+ 		        JComboBox cb = (JComboBox)e.getSource();
+ 		        if(cb.getSelectedIndex()==0){
+ 		        	
+ 		        	selectedgraph = 0;
+ 		        }
+ 		        else{
+ 		        	selectedgraph = 1;
+ 		        }
+			//	JOptionPane.showMessageDialog(getRootPane(),(String)cb.getSelectedItem());
+		//		getRCM(Integer.parseInt((String)cb.getSelectedItem()));
+			//	setRCMcontrol();
+				
+
+ 		    }
+ 		    
+ 		});
+ 		statspanel.add(createCharts(selectedgraph),BorderLayout.CENTER);
+ 		statspanel.add(list,BorderLayout.SOUTH);
+    	statspanel.revalidate();
+    }
+    
+    private void readFromFile() throws IOException{
+    	double[] totalItems = new double[3];
+    	double[] totalAmount = new double[3];
+    	for (int i = 0;i<totalItems.length;i++){
+    		totalItems[i] = 0;
+    	}
+    	
+    	final String fileName = "/Users/Jonathan/recyclingproject/RecyclingProject/src/data/data.txt";
+    	BufferedReader br = new BufferedReader(new FileReader(fileName));
+		  String line;
+		  while ((line = br.readLine()) != null) {
+			  String[] dataList = line.split(",");
+			  totalItems[0] += Double.parseDouble(dataList[4]);
+			  totalAmount[0]+= Double.parseDouble(dataList[10]);
+			  totalItems[1] += Double.parseDouble(dataList[5]);
+			  totalAmount[1]+= Double.parseDouble(dataList[11]);
+			  totalItems[2] += Double.parseDouble(dataList[6]); 
+			  totalAmount[3]+= Double.parseDouble(dataList[12]);
+		  }
+		  br.close();
+		  
+		   totalAmountOfItems = Arrays.copyOf(totalItems, totalItems.length);
+		   totalAmountPaidByItem = Arrays.copyOf(totalAmount, totalAmount.length);
+		// return createCharts("Total Amount Collected by RCMs",totalItems);
+		  
+		 
+    }
+    
+    private ChartPanel createCharts(int i){
+    	String[] graphnames = new String[2];
+    	graphnames[0] = "Total Amount of Items Collected in RCM Group";
+    	graphnames[1] = "Total Value Paid by Type in RCM Group";
+    	if(i==0){
+    	
+    		String[] names = new String[3];
+    		
+    		names[0] = "Aluminum";      
+    		names[1] = "Plastic";
+    		names[2] = "Glass";
+        try {
+			readFromFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return new ChartPanel(totalAmountOfItems, names, graphnames[i]);
+    	}
+    	else{
+    		
+    		String[] names = new String[3];
+    		
+    		names[0] = "Aluminum";      
+    		names[1] = "Plastic";
+    		names[2] = "Glass";
+    		try {
+    			readFromFile();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        return new ChartPanel( totalAmountPaidByItem, names, graphnames[i]);
+    	}
+    }
+    
+    private void constructAllGraphics(){
+    	
+    }
    
     
     private JPanel createTitle(){
@@ -799,11 +908,13 @@ public class RecyclingSystem {
 		RecyclingMachine rcm = new RecyclingMachine();
 		RecyclingMonitoringStation rmos = new RecyclingMonitoringStation();
 		RecyclingMachine rcm2 = new RecyclingMachine();
+		RecyclingMachine rcm3 = new RecyclingMachine();
 	//	rcm2.setGroup(0);
 	//	System.out.println(rcm1.getMachineID());
 	//	System.out.println(rcm2.getMachineID());
 		rmos.addExistingMachine(rcm);
 		rmos.addExistingMachine(rcm2);
+		rmos.addExistingMachine(rcm3);
 		rcm2.initiateSession("Aluminum");
 		rcm2.addItem();
 		rcm2.initiateSession("Plastic");
@@ -811,11 +922,31 @@ public class RecyclingSystem {
 		rcm2.addItem();
 		rcm2.addItem();
 		rcm2.addItem();
+		
+		rcm3.initiateSession("Aluminum");
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.initiateSession("Plastic");
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.addItem();
+		rcm3.initiateSession("Glass");
+		rcm3.addItem();
+		rcm3.addItem();
+		
 	//	rmos.addMachine();
 		
 	//	rmos.getMachineIDS();
 		//FileHandler.scanAndShow();
 		FileHandler.writeToFile(rcm2);
+		FileHandler.writeToFile(rcm3);
 		FileHandler.scanAndShow();
 		new RecyclingSystem(rcm,rmos);
 		

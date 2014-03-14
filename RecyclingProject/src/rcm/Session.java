@@ -76,8 +76,17 @@ public class Session {
 	public double getPayingAmountForItem(String nameOfItem){
 		for (int i=0;i<objectCounter;i++){
 			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
-				System.out.println(recyclableItemList[i].getPayingAmountForItem());
+				
 				return recyclableItemList[i].getPayingAmountForItem();
+			}
+		}
+		return 0;
+	}
+	public double getCurrentAmountForItem(String nameOfItem){
+		for (int i=0;i<objectCounter;i++){
+			if(((recyclableItemList[i].getTypeOfItem()).toLowerCase()).equals((nameOfItem.toLowerCase()))){
+				
+				return recyclableItemList[i].getPaymentAmount();
 			}
 		}
 		return 0;
