@@ -360,7 +360,7 @@ class RMOSUI extends JPanel {
     	this.rmos=rmos;
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	setBackground(Color.lightGray);
-    	df = new DecimalFormat("#.##");
+    	df = new DecimalFormat("#.00");
     	//adminLogin();
     //	if(adminLogin()){
     	statspanel = new JPanel(new BorderLayout());
@@ -491,9 +491,11 @@ class RMOSUI extends JPanel {
  		        if(cb.getSelectedIndex()==0){
  		        	
  		        	selectedgraph = 0;
+ 		        	setReportcontrol();
  		        }
  		        else{
  		        	selectedgraph = 1;
+ 		        	setReportcontrol();
  		        }
 			//	JOptionPane.showMessageDialog(getRootPane(),(String)cb.getSelectedItem());
 		//		getRCM(Integer.parseInt((String)cb.getSelectedItem()));
@@ -509,10 +511,12 @@ class RMOSUI extends JPanel {
     }
     
     private void readFromFile() throws IOException{
+    	
     	double[] totalItems = new double[3];
     	double[] totalAmount = new double[3];
     	for (int i = 0;i<totalItems.length;i++){
     		totalItems[i] = 0;
+    		totalAmount[i] = 0;
     	}
     	
     	final String fileName = "/Users/Jonathan/recyclingproject/RecyclingProject/src/data/data.txt";
@@ -521,11 +525,11 @@ class RMOSUI extends JPanel {
 		  while ((line = br.readLine()) != null) {
 			  String[] dataList = line.split(",");
 			  totalItems[0] += Double.parseDouble(dataList[4]);
-			  totalAmount[0]+= Double.parseDouble(dataList[10]);
+			  totalAmount[0]+= Double.parseDouble(df.format(Double.parseDouble(dataList[9])));
 			  totalItems[1] += Double.parseDouble(dataList[5]);
-			  totalAmount[1]+= Double.parseDouble(dataList[11]);
+			  totalAmount[1]+= Double.parseDouble(dataList[10]);
 			  totalItems[2] += Double.parseDouble(dataList[6]); 
-			  totalAmount[3]+= Double.parseDouble(dataList[12]);
+			  totalAmount[2]+= Double.parseDouble(dataList[11]);
 		  }
 		  br.close();
 		  
@@ -538,8 +542,8 @@ class RMOSUI extends JPanel {
     
     private ChartPanel createCharts(int i){
     	String[] graphnames = new String[2];
-    	graphnames[0] = "Total Amount of Items Collected in RCM Group";
-    	graphnames[1] = "Total Value Paid by Type in RCM Group";
+    	graphnames[0] = "Total Amount of Items Collected in RCM Group (Qty)";
+    	graphnames[1] = "Total Value Paid by Type in RCM Group ($)";
     	if(i==0){
     	
     		String[] names = new String[3];
@@ -572,11 +576,7 @@ class RMOSUI extends JPanel {
     	}
     }
     
-    private void constructAllGraphics(){
-    	
-    }
-   
-    
+       
     private JPanel createTitle(){
     	JPanel panel = new JPanel();
     	Font font = new Font("Verdana", Font.BOLD, 30);

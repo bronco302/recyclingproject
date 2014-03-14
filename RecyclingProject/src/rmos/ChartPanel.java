@@ -45,7 +45,7 @@ public class ChartPanel extends JPanel {
 
     Font titleFont = new Font("SansSerif", Font.BOLD, 20);
     FontMetrics titleFontMetrics = g.getFontMetrics(titleFont);
-    Font labelFont = new Font("SansSerif", Font.PLAIN, 15);
+    Font labelFont = new Font("SansSerif", Font.PLAIN, 18);
     FontMetrics labelFontMetrics = g.getFontMetrics(labelFont);
 
     int titleWidth = titleFontMetrics.stringWidth(title);
@@ -73,13 +73,13 @@ public class ChartPanel extends JPanel {
         height = -height;
       }
 
-      g.setColor(Color.red);
+      g.setColor(Color.GREEN);
       g.fillRect(valueX, valueY, barWidth - 2, height);
       g.setColor(Color.black);
       g.drawRect(valueX, valueY, barWidth - 2, height);
       int labelWidth = labelFontMetrics.stringWidth(names[i]);
       x = i * barWidth + (barWidth - labelWidth) / 2;
-      g.drawString(names[i]+" "+values[i], x, y);
+      g.drawString(names[i]+" "+Math.round(values[i]*100)/100, x, y);
     }
     
  
