@@ -10,8 +10,9 @@ import javax.swing.JPanel;
 
 class BarChart extends JPanel
 {
-	private Map<Color, Integer> bars =
-            new LinkedHashMap<Color, Integer>();
+	
+	private static final long serialVersionUID = 1L;
+	private Map<Color, Integer> bars = new LinkedHashMap<Color, Integer>();
 
 	public BarChart()
 	{

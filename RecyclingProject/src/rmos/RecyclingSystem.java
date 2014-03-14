@@ -336,7 +336,7 @@ class RMOSUI extends JPanel {
 	private RCMUI rcmui;
 	private JLabel title,machineIDlabel,operationalstatuslabel,moneyleftlabel,moneycapacitylabel,weightcapacitylabel,currentweightlabel,lastemptiedlabel;
 	private JLabel machinelocationlabel;
-	private JPanel inputpanel ;
+	private JPanel inputpanel,statspanel ;
 	private JList listofmachines;
 	private String registeredmachines[];
 	private RecyclingMonitoringStation rmos;
@@ -356,6 +356,7 @@ class RMOSUI extends JPanel {
     	df = new DecimalFormat("#.##");
     	//adminLogin();
     //	if(adminLogin()){
+    	statspanel = new JPanel(new BorderLayout());
     	inputpanel = new JPanel(new BorderLayout());
     	modifierPanel = new JPanel(new GridLayout(12,2));
     	machinepanel = new JPanel(new GridLayout(1,1));
@@ -407,22 +408,39 @@ class RMOSUI extends JPanel {
     private void setRMOScontrol()
  	{	
     	adminpanel.removeAll();
-    	
     	inputpanel.removeAll();
+    	JPanel rmospanel = new JPanel();
+    	JPanel reportspanel = new JPanel();
     	
+    	//reportspanel.setPreferredSize(new Dimension(500,500));
+    	/*
     	chart = new BarChart();
 		
-    	setPreferredSize(new Dimension(800,800));
+    	
 		chart.addBar(Color.red, 100);
 		chart.addBar(Color.green, 8);
 		chart.addBar(Color.blue, 54);
 		chart.addBar(Color.black, 23);
-
+		chart.addBar(Color.BLUE, 14);
+		*/
     	//adminpanel.revalidate();
+    	double[] values = new double[3];
+        String[] names = new String[3];
+        values[0] = 1;
+        names[0] = "Item 1";
+
+        values[1] = 2;
+        names[1] = "Item 2";
+
+        values[2] = 4;
+        names[2] = "Item 3";
+        
+        //reportspanel.setPreferredSize(new Dimension(500,500));
+ 		statspanel.add(new ChartPanel(values, names, "title"),BorderLayout.CENTER);
     	createMachinesList();
+    	
     	final JTabbedPane tabbedPane = new JTabbedPane();
-    	JPanel rmospanel = new JPanel();
-    	JPanel reportspanel = new JPanel();
+    	
     	
     	
  		JPanel titlePanel = createTitle();
@@ -432,13 +450,15 @@ class RMOSUI extends JPanel {
  		inputpanel.add(machinepanel,BorderLayout.WEST);
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
  		inputpanel.add(addButton,BorderLayout.SOUTH);
+ 	
  		adminpanel.revalidate();
  		inputpanel.revalidate(); 
  		
- 		reportspanel.add(chart);
- 		System.out.println(chart.getComponentCount());
+ 		//System.out.println(chart.);
+ 		;
+ 		
  		rmospanel.add(inputpanel);
- 	
+ 		reportspanel.add(statspanel);
  		tabbedPane.addTab("Machines",rmospanel);
     	tabbedPane.addTab("Reports",reportspanel);
  		add(tabbedPane);
