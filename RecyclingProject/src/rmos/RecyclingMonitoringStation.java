@@ -104,7 +104,9 @@ public class RecyclingMonitoringStation {
 		
 	}
 	
-	
+	public void deleteRCM(int id){
+		registeredMachines[queryMachine(id)].setGroup(0);
+	}
 	
 	public void print(int id){
 		System.out.println(queryMachine(id));
@@ -122,6 +124,13 @@ public class RecyclingMonitoringStation {
 		registeredMachines[queryMachine(id)].addItemType(item);
 	}
 	
+	public String getPriceForItem(String item,int id){
+		return registeredMachines[queryMachine(id)].getPaymentForItem(item);
+	}
+	
+	public void updatepPriceForItem(String item,int id,double amount){
+		registeredMachines[queryMachine(id)].updatePaymentForItem(item, amount);
+	}
 	public int queryMachine(int id){
 		for (int i=0;i<objectCounter;i++){
 			if(registeredMachines[i].getMachineID()==id){

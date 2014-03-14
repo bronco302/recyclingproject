@@ -40,6 +40,14 @@ public class RecyclableItem implements ItemForRecycle {
 	public double getPayingAmountForItem(){
 		return acceptableItems.get(typeOfRecyclableItem);
 	}
+	public void updatePrice(double amount){
+		acceptableItems.put(typeOfRecyclableItem, amount);
+	}
+	public void updatePrice(String item, double amount){
+		acceptableItems.put(item, amount);
+	}
+	
+	
 	public String getTypeOfItem(){
 		return typeOfRecyclableItem; 
 	}

@@ -12,13 +12,6 @@ import java.util.*;
  
 public class RecyclingMachine extends Observable{
   
-    //public enum MachineHealth{
-     // ALMOST_FULL, FULL; CASH_NEEDED; COUPONS_NEEDED; FUNCTIONING_WELL; 
-   // }
-   // public enum Aciivity{
-    // INACTIVITY; 
-   //  ACTIVITY;
-   // }
     
     private int machineID; 
     private boolean active;
@@ -32,7 +25,7 @@ public class RecyclingMachine extends Observable{
     private Timestamp lastEmptied; 
     private Date date= new Date();
 	private long time; 
-    private double weightCapacity = 5.0;
+    private double weightCapacity = 10.0;
     private double currentWeight = 0.0;
     private boolean full;
     private Random generator = new Random(); 
@@ -162,6 +155,16 @@ public class RecyclingMachine extends Observable{
 		return format.format(transaction.getPayingAmountForItem(selectedItemType));
 	}
 
+	public String getPaymentForItem(String item){
+		DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+		return format.format(transaction.getPayingAmountForItem(item));
+	}
+	
+	public void updatePaymentForItem(String item,double amount){
+		transaction.updatePayingAmountForItem(item, amount);
+	}
+	
 	public int getGroup() {
 		return group;
 	}

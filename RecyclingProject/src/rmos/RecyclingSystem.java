@@ -1,4 +1,5 @@
 package rmos;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -316,7 +317,7 @@ class RCMUI extends JPanel {
  	
  	public void getRCM(int machineID){
  		rcm = rmos.getRCM(machineID);
- 		System.out.println(rcm.getMachineID());
+ 		
  	}
  	
  	public String[] splitStringToArray(String string){
@@ -343,6 +344,7 @@ class RMOSUI extends JPanel {
 	private JButton activationButton,emptyrcmButton;
 	private int selectedmachine;
 	private JPanel adminpanel;
+	private BarChart chart;
 	DecimalFormat df ;
 	
    
@@ -355,7 +357,7 @@ class RMOSUI extends JPanel {
     	//adminLogin();
     //	if(adminLogin()){
     	inputpanel = new JPanel(new BorderLayout());
-    	modifierPanel = new JPanel(new GridLayout(14,2));
+    	modifierPanel = new JPanel(new GridLayout(12,2));
     	machinepanel = new JPanel(new GridLayout(1,1));
    	//	setRMOScontrol();
     //	}
@@ -407,31 +409,44 @@ class RMOSUI extends JPanel {
     	adminpanel.removeAll();
     	
     	inputpanel.removeAll();
+    	
+    	chart = new BarChart();
+		
+    	setPreferredSize(new Dimension(800,800));
+		chart.addBar(Color.red, 100);
+		chart.addBar(Color.green, 8);
+		chart.addBar(Color.blue, 54);
+		chart.addBar(Color.black, 23);
+
     	//adminpanel.revalidate();
     	createMachinesList();
     	final JTabbedPane tabbedPane = new JTabbedPane();
     	JPanel rmospanel = new JPanel();
     	JPanel reportspanel = new JPanel();
-    	tabbedPane.addTab("Machines",rmospanel);
-    	tabbedPane.addTab("Reports",reportspanel);
+    	
+    	
  		JPanel titlePanel = createTitle();
  		JPanel addButton = createAddButton();
  		
- 		
- 		
- 			
  		inputpanel.add(titlePanel,BorderLayout.NORTH);
  		inputpanel.add(machinepanel,BorderLayout.WEST);
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
  		inputpanel.add(addButton,BorderLayout.SOUTH);
- 		inputpanel.revalidate();
  		adminpanel.revalidate();
- 		rmospanel.add(inputpanel);
+ 		inputpanel.revalidate(); 
  		
+ 		reportspanel.add(chart);
+ 		System.out.println(chart.getComponentCount());
+ 		rmospanel.add(inputpanel);
+ 	
+ 		tabbedPane.addTab("Machines",rmospanel);
+    	tabbedPane.addTab("Reports",reportspanel);
  		add(tabbedPane);
  		
  		
  	}
+    
+   
     
     private JPanel createTitle(){
     	JPanel panel = new JPanel();
@@ -485,13 +500,38 @@ class RMOSUI extends JPanel {
     	JPanel glasspricepanel = new JPanel(new GridLayout(1,2));
     	JLabel aluminumpricelabel = new JLabel("Aluminum Price: ");
     	JLabel plasticpricelabel = new JLabel("Plastic Price: ");
-    	JLabel glasspricelabel = new JLabel("Glass Price: ");
-    	JButton updatealuminumprice = new JButton("Update Price");
+    	final JLabel glasspricelabel = new JLabel("Glass Price: ");
+    	final JButton updatealuminumprice = new JButton("Update Price");
+    	final JTextField aluminumpricefield = new JTextField(rmos.getPriceForItem("Aluminum", selectedmachine));
+    	//aluminumpricefield.setText(rmos.getPriceForItem("Aluminum", selectedmachine));
+    	final JTextField plasticpricefield = new JTextField(rmos.getPriceForItem("Plastic", selectedmachine));
+    	final JTextField glasspricefield = new JTextField(rmos.getPriceForItem("Glass", selectedmachine));
+    	updatealuminumprice.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			Double.parseDouble(aluminumpricefield.getText());
+    			rmos.updatepPriceForItem("Aluminum",selectedmachine,Double.parseDouble(aluminumpricefield.getText()));
+    			createSettings();
+    			rcmui.setRCMcontrol();
+    		}
+    	});
     	JButton updateplasticprice = new JButton("Update Price");
+    	updateplasticprice.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			Double.parseDouble(aluminumpricefield.getText());
+    			rmos.updatepPriceForItem("Plastic",selectedmachine,Double.parseDouble(plasticpricefield.getText()));
+    			createSettings();
+    			rcmui.setRCMcontrol();
+    		}
+    	});
     	JButton updateglassprice = new JButton("Update Price");
-    	JTextField aluminumpricefield = new JTextField();
-    	JTextField plasticpricefield = new JTextField();
-    	JTextField glasspricefield = new JTextField();
+    	updateglassprice.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			Double.parseDouble(aluminumpricefield.getText());
+    			rmos.updatepPriceForItem("Glass",selectedmachine,Double.parseDouble(glasspricefield.getText()));
+    			createSettings();
+    			rcmui.setRCMcontrol();
+    		}
+    	});
     	JButton aluminum = new JButton();
     	if(rmos.isItemValid(selectedmachine, "Aluminum")){
     		aluminum.setText("Deactivate");
@@ -603,6 +643,16 @@ class RMOSUI extends JPanel {
     	weightcapacitylabel = new JLabel("Weight Capacity: "+rmos.getWeightCapacityForMachine(selectedmachine));
     	lastemptiedlabel = new JLabel("Last Time Emptied: "+rmos.getLastTimeEmptied(selectedmachine));
     	
+    	JButton deletercmButton = new JButton("Delete RCM");
+    	deletercmButton.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			rmos.deleteRCM(selectedmachine);
+    			createMachinesList();
+    			createSettings();
+    			rcmui.setRCMcontrol();
+    		}
+    	});
+    	
     	modifierPanel.add(machineIDlabel);
     	modifierPanel.add(machinelocationlabel);
     	modifierPanel.add(operationalstatuslabel);
@@ -632,17 +682,7 @@ class RMOSUI extends JPanel {
     	glasspricepanel.add(glasspricefield);
     	modifierPanel.add(glasspricepanel);
     	modifierPanel.add(updateglassprice);
-    	
-    	//modifierPanel.add(aluminumpricelabel);
-    	//modifierPanel.add(aluminumpricefield);
-    //	modifierPanel.add(plasticpricelabel);
-    //	modifierPanel.add(plasticpricefield);
-    //	modifierPanel.add(glasspricelabel);
-    //	modifierPanel.add(glasspricefield);
-
-  
-    	
-    	
+    	modifierPanel.add(deletercmButton);
     	modifierPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
     	modifierPanel.revalidate();
     	
@@ -756,6 +796,7 @@ public class RecyclingSystem {
 	//	rmos.getMachineIDS();
 		//FileHandler.scanAndShow();
 		FileHandler.writeToFile(rcm2);
+		FileHandler.scanAndShow();
 		new RecyclingSystem(rcm,rmos);
 		
 	}

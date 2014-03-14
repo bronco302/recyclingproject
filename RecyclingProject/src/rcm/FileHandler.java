@@ -14,16 +14,14 @@ public class FileHandler {
 	private static String fileName = "/Users/Jonathan/recyclingproject/RecyclingProject/src/data/data.txt";
 	
 	public static void scanAndShow() throws IOException {
-		  Scanner s = null;
-		  try {
-		    s = new Scanner(new BufferedReader(new FileReader(fileName)));
-		  	s.useDelimiter("[,]+");
-		   while (s.hasNext()) {
-		        System.out.println(s.next());}
-		    } 
-		   finally {
-		            if (s != null) s.close();
-		   }
+		  
+		  BufferedReader br = new BufferedReader(new FileReader(fileName));
+		  String line;
+		  while ((line = br.readLine()) != null) {
+			  //
+		  }
+		  br.close();
+		 
 	}
 	public static void writeToFile(RecyclingMachine rcm) throws IOException{
 		java.util.Date date= new java.util.Date();
