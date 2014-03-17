@@ -15,7 +15,6 @@ import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
@@ -34,12 +33,10 @@ class RCMUI extends JPanel {
 	private RecyclingMonitoringStation rmos;
 	private RMOSUI rmosui;
 	
-	private ActionListener itemButtonEventHandler;
+	
 	private StringBuilder selectedItem;
 	private JPanel inputpanel;
     private JTextArea messageTextArea,totalAmount;
-    private JTextArea body;
-    private JLabel machineIDLabel;
     private JLabel title,logo,selected;
     private JButton addItemButton,helpButton,finishButton;
     private JButton aluminumButton,plasticButton,glassButton;
@@ -378,7 +375,7 @@ class RMOSUI extends JPanel {
 	private JPanel adminpanel;
 	private double[] totalAmountOfItems;
 	private double[] totalAmountPaidByItem;
-	private BarChart chart;
+	
 	DecimalFormat df ;
 	
    
@@ -425,14 +422,10 @@ class RMOSUI extends JPanel {
  				}
  				else
  				{
- 					
  					JOptionPane.showMessageDialog(getRootPane(),"The username and password combination are not valid. Please try again.");
-
  				}
- 			
  			}
     	});
-    	
     	
     	adminpanel.add(user);
     	adminpanel.add(username);
@@ -449,27 +442,11 @@ class RMOSUI extends JPanel {
     	inputpanel.removeAll();
     	
     	JPanel rmospanel = new JPanel();
-    	JPanel reportspanel = new JPanel();
-    	
-    	//reportspanel.setPreferredSize(new Dimension(500,500));
-    	/*
-    	chart = new BarChart();
-		
-    	
-		chart.addBar(Color.red, 100);
-		chart.addBar(Color.green, 8);
-		chart.addBar(Color.blue, 54);
-		chart.addBar(Color.black, 23);
-		chart.addBar(Color.BLUE, 14);
-		*/
-    	//adminpanel.revalidate();
-    	
+        	
     	createMachinesList();
     	
     	final JTabbedPane tabbedPane = new JTabbedPane();
-    	
-    	
-    	
+    		
  		JPanel titlePanel = createTitle();
  		JPanel addButton = createAddButton();
  		
@@ -477,34 +454,19 @@ class RMOSUI extends JPanel {
  		inputpanel.add(machinepanel,BorderLayout.WEST);
  		inputpanel.add(modifierPanel,BorderLayout.CENTER);
  		inputpanel.add(addButton,BorderLayout.SOUTH);
- 	
- 		
- 		
-       
-        //reportspanel.setPreferredSize(new Dimension(500,500));
-        
- 		//statspanel.add(new ChartPanel(values, names, "title"),BorderLayout.CENTER);
- 		//System.out.println(chart.);
- 		
+
  		setReportcontrol();
- 		rmospanel.add(inputpanel);
- 		//reportspanel.add(statspanel);
- 		
+ 		rmospanel.add(inputpanel);	
  		tabbedPane.addTab("Machines",rmospanel);
     	tabbedPane.addTab("Reports",statspanel);
     	adminpanel.revalidate();
- 		inputpanel.revalidate(); 
- 		
- 		add(tabbedPane);
- 		
- 		
+ 		inputpanel.revalidate();  		
+ 		add(tabbedPane);	
  	}
     
-    public void setReportcontrol(){
-    	
-    	
+    public void setReportcontrol(){ 	
     	statspanel.removeAll();
-    	
+  
     	String[] graphNames = new String[2];
     	graphNames[0] = "Total Amount Collected in RCM Group";
     	graphNames[1] = "Total Value Paid by Type";
@@ -523,13 +485,7 @@ class RMOSUI extends JPanel {
  		        	selectedgraph = 1;
  		        	setReportcontrol();
  		        }
-			//	JOptionPane.showMessageDialog(getRootPane(),(String)cb.getSelectedItem());
-		//		getRCM(Integer.parseInt((String)cb.getSelectedItem()));
-			//	setRCMcontrol();
-				
-
  		    }
- 		    
  		});
  		statspanel.add(createCharts(selectedgraph),BorderLayout.CENTER);
  		statspanel.add(list,BorderLayout.SOUTH);
@@ -537,7 +493,6 @@ class RMOSUI extends JPanel {
     }
     
     private void readFromFile() throws IOException{
-    	
     	double[] totalItems = new double[3];
     	double[] totalAmount = new double[3];
     	for (int i = 0;i<totalItems.length;i++){
@@ -561,9 +516,7 @@ class RMOSUI extends JPanel {
 		  
 		   totalAmountOfItems = Arrays.copyOf(totalItems, totalItems.length);
 		   totalAmountPaidByItem = Arrays.copyOf(totalAmount, totalAmount.length);
-		// return createCharts("Total Amount Collected by RCMs",totalItems);
 		  
-		 
     }
     
     private ChartPanel createCharts(int i){
@@ -571,9 +524,7 @@ class RMOSUI extends JPanel {
     	graphnames[0] = "Total Amount of Items Collected in RCM Group (Qty)";
     	graphnames[1] = "Total Value Paid by Type in RCM Group ($)";
     	if(i==0){
-    	
     		String[] names = new String[3];
-    		
     		names[0] = "Aluminum";      
     		names[1] = "Plastic";
     		names[2] = "Glass";
@@ -601,12 +552,10 @@ class RMOSUI extends JPanel {
         return new ChartPanel( totalAmountPaidByItem, names, graphnames[i]);
     	}
     }
-    
        
     private JPanel createTitle(){
     	JPanel panel = new JPanel();
-    	Font font = new Font("Verdana", Font.BOLD, 30);
-    	
+    	Font font = new Font("Verdana", Font.BOLD, 30);	
     	title = new JLabel("Recycling Monitoring Station");
     	title.setVerticalAlignment(JLabel.TOP);
     	title.setHorizontalAlignment(JLabel.CENTER);
@@ -640,12 +589,9 @@ class RMOSUI extends JPanel {
     public void selectedMachine(String machineID){
 
     	selectedmachine = Integer.parseInt(machineID);
-    	createSettings();
+    	createSettings();	
     	
-    	
-    }
-    
-    
+    }  
     
     public void createSettings(){
     	
@@ -761,7 +707,6 @@ class RMOSUI extends JPanel {
     	machineIDlabel = new JLabel("Recycling Machine ID: "+selectedmachine);
     	machineIDlabel.setHorizontalAlignment(JLabel.LEFT);
     	machinelocationlabel = new JLabel("Location: "+rmos.getLocation());
-    	//modifierPanel.repaint();
     	emptyrcmButton = new JButton("Empty RCM");
     	emptyrcmButton.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
@@ -876,11 +821,9 @@ public class RecyclingSystem {
         
         mainFrame = new JFrame("Auction House");
         mainFrame.pack();
-        
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        mainPanel = new RCMUI(rcm,rmos);
-       
+  
+        mainPanel = new RCMUI(rcm,rmos);     
         mainPanel1 = new RMOSUI(rmos);
         
         mainPanel.rmosConnection(mainPanel1);
@@ -895,7 +838,6 @@ public class RecyclingSystem {
     	int height = screenSize.height;
     	int width = screenSize.width;
     	mainFrame.setSize(width, height);
-
     	mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }
