@@ -104,6 +104,12 @@ public class RecyclingMonitoringStation {
 		
 	}
 	
+	public double coupon(int id){
+		return registeredMachines[queryMachine(id)].coupon();
+	}
+	
+	
+	
 	public void deleteRCM(int id){
 		registeredMachines[queryMachine(id)].setGroup(0);
 	}

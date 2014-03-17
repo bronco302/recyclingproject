@@ -27,6 +27,7 @@ public class RecyclingMachine extends Observable{
 	private long time; 
     private double weightCapacity = 10.0;
     private double currentWeight = 0.0;
+    private double coupon = 0;
     private boolean full;
     private Random generator = new Random(); 
     private Map<String, Integer> acceptableItems ; 
@@ -47,6 +48,23 @@ public class RecyclingMachine extends Observable{
 		acceptableItems.put("Glass" , 0);
     
 
+    }
+    
+    public RecyclingMachine(int machineid){
+    	machineID = machineid;
+    	active = true;	
+    	transaction = new Session();
+    	time = date.getTime();
+    	lastEmptied = null;
+    	setLocation(new String("Santa Clara"));
+    	this.Status = "Enabled"; 
+    	availableCash = new Payment(5);
+    	cashCapacity = new Payment(5);
+    	acceptableItems = new HashMap<String, Integer>();
+    	acceptableItems.put("Aluminum" , 1);
+		acceptableItems.put("Plastic" , 1);
+		acceptableItems.put("Glass" , 0);
+    
     }
     
     public int getMachineID(){
@@ -75,6 +93,13 @@ public class RecyclingMachine extends Observable{
 		setSelectedItemType(itemType);
 	
 	}
+	public void couponUpdate(double amount){
+		coupon += amount;
+	}
+	
+	public double coupon(){
+		return coupon;
+	}
 	
 	public int addItem(){
 		if(currentWeight<weightCapacity){
@@ -99,6 +124,7 @@ public class RecyclingMachine extends Observable{
 		
 		
 	}
+	
 	
 	public double payCustomer(){
 		if(checkFunds(transaction.updateTotalAmount())){

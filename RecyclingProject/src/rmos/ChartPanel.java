@@ -73,7 +73,7 @@ public class ChartPanel extends JPanel {
         height = -height;
       }
 
-      g.setColor(Color.GREEN);
+      g.setColor(new Color(0,159,53));
       g.fillRect(valueX, valueY, barWidth - 2, height);
       g.setColor(Color.black);
       g.drawRect(valueX, valueY, barWidth - 2, height);

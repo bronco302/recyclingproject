@@ -300,8 +300,35 @@ class RCMUI extends JPanel {
  		});
  		JLabel machineidlabel = new JLabel("Machine ID: "+rcm.getMachineID());
  		
- 		helpButton = new JButton("Help");
+ 		helpButton = new JButton("Coupon Instead of Cash");
     	helpButton.setSize(new Dimension(20, 20));
+    	helpButton.addActionListener(new ActionListener(){
+ 			public void actionPerformed(ActionEvent e){
+ 				
+		
+ 				JOptionPane.showMessageDialog(getRootPane(),"Thank you for using our recycling services. Due to insufficient funds we will print you a coupon of equal value redeemble at any store. Coupon Value: "+rcm.getCurrentAmount());
+ 		
+ 				try {
+					FileHandler.writeToFile(rcm);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+ 			// 	rcm.coupon(rcm.getCurrentAmount());
+ 				rcm.clearData();
+ 				messageTextArea.setText("");
+ 				totalAmount.setText("$"+rcm.getCurrentAmount());
+ 				addItemButton.setEnabled(false);
+ 				finishButton.setEnabled(false);
+ 				aluminumButton.setEnabled(true);
+ 				plasticButton.setEnabled(true);
+ 				glassButton.setEnabled(true);
+ 				rmosui.createSettings();
+ 				}
+ 			
+ 				
+ 			
+ 			
+ 		});
     	panel2.add(machineidlabel);
     	panel2.add(list);
     	panel.add(panel2,BorderLayout.NORTH);
@@ -361,14 +388,12 @@ class RMOSUI extends JPanel {
     	setBorder(BorderFactory.createLineBorder(Color.BLACK));
     	setBackground(Color.lightGray);
     	df = new DecimalFormat("#.00");
-    	//adminLogin();
-    //	if(adminLogin()){
+   
     	statspanel = new JPanel(new BorderLayout());
     	inputpanel = new JPanel(new BorderLayout());
     	modifierPanel = new JPanel(new GridLayout(12,2));
     	machinepanel = new JPanel(new GridLayout(1,1));
-   	//	setRMOScontrol();
-    //	}
+
     	adminLogin();
     }    
     
@@ -383,13 +408,13 @@ class RMOSUI extends JPanel {
     	JLabel pass = new JLabel("Password");
     	TitledBorder title = BorderFactory.createTitledBorder("Login");
     	final JTextField username = new JTextField(5);
-    	final JTextField password = new JTextField(5);
+    	final JPasswordField password = new JPasswordField(5);
     	JButton submit = new JButton("Submit");
     	submit.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
     			
- 				if(admin.validate(username.getText(), password.getText())){
- 					
+ 				if(admin.validate(username.getText(), new String(password.getPassword()))){
+ 					adminpanel.setVisible(false);
  					try {
 						setRMOScontrol();
 					} catch (IOException e1) {
@@ -400,6 +425,7 @@ class RMOSUI extends JPanel {
  				}
  				else
  				{
+ 					
  					JOptionPane.showMessageDialog(getRootPane(),"The username and password combination are not valid. Please try again.");
 
  				}
@@ -622,7 +648,7 @@ class RMOSUI extends JPanel {
     
     
     public void createSettings(){
-    	//JPanel panel = new JPanel(new GridLayout(3,1));
+    	
     	modifierPanel.removeAll();
     	JPanel aluminumpricepanel = new JPanel(new GridLayout(1,2));
     	JPanel plasticpricepanel = new JPanel(new GridLayout(1,2));
@@ -632,7 +658,6 @@ class RMOSUI extends JPanel {
     	final JLabel glasspricelabel = new JLabel("Glass Price: ");
     	final JButton updatealuminumprice = new JButton("Update Price");
     	final JTextField aluminumpricefield = new JTextField(rmos.getPriceForItem("Aluminum", selectedmachine));
-    	//aluminumpricefield.setText(rmos.getPriceForItem("Aluminum", selectedmachine));
     	final JTextField plasticpricefield = new JTextField(rmos.getPriceForItem("Plastic", selectedmachine));
     	final JTextField glasspricefield = new JTextField(rmos.getPriceForItem("Glass", selectedmachine));
     	updatealuminumprice.addActionListener(new ActionListener(){
@@ -832,13 +857,10 @@ class RMOSUI extends JPanel {
     	return panel;
     }
     
-   
     public String[] splitStringToArray(String string){
     	return string.split(",");
     }
  	
-    
-    
  }
 
 
@@ -878,40 +900,13 @@ public class RecyclingSystem {
         mainFrame.setVisible(true);
     }
 	public static void main(String [] args) throws IOException{
-	/*
-		Session s1 = new Session();
-		s1.addRecyclableItem("Aluminum");
-		s1.addItem("Aluminum");
-		s1.addRecyclableItem("Plastic");
-		s1.addItem("Plastic");
-
-		System.out.println(s1.updateTotalAmount());
-		
-		
-		RecyclingMachine rcm = new RecyclingMachine();
-		
-		rcm.initiateSession("Aluminum");
-		rcm.addItem();
-		rcm.initiateSession("Plastic");
-		rcm.addItem();
-		rcm.addItem();
-		rcm.addItem();
-		rcm.addItem();
-		
-		
-		System.out.println(rcm.payCustomer());
-		//System.out.println(rcm.getAvailableCash());
-		
-		 */
-	//	RecyclingMonitoringStation rmos = new RecyclingMonitoringStation();
-		
-		RecyclingMachine rcm = new RecyclingMachine();
+	
+	
+		RecyclingMachine rcm = new RecyclingMachine(14150);
 		RecyclingMonitoringStation rmos = new RecyclingMonitoringStation();
-		RecyclingMachine rcm2 = new RecyclingMachine();
-		RecyclingMachine rcm3 = new RecyclingMachine();
-	//	rcm2.setGroup(0);
-	//	System.out.println(rcm1.getMachineID());
-	//	System.out.println(rcm2.getMachineID());
+		RecyclingMachine rcm2 = new RecyclingMachine(14151);
+		RecyclingMachine rcm3 = new RecyclingMachine(14152);
+	
 		rmos.addExistingMachine(rcm);
 		rmos.addExistingMachine(rcm2);
 		rmos.addExistingMachine(rcm3);
@@ -922,7 +917,6 @@ public class RecyclingSystem {
 		rcm2.addItem();
 		rcm2.addItem();
 		rcm2.addItem();
-		
 		rcm3.initiateSession("Aluminum");
 		rcm3.addItem();
 		rcm3.addItem();
@@ -941,10 +935,6 @@ public class RecyclingSystem {
 		rcm3.addItem();
 		rcm3.addItem();
 		
-	//	rmos.addMachine();
-		
-	//	rmos.getMachineIDS();
-		//FileHandler.scanAndShow();
 		FileHandler.writeToFile(rcm2);
 		FileHandler.writeToFile(rcm3);
 		FileHandler.scanAndShow();
